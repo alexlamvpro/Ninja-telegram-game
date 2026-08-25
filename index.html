@@ -2,7 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
 
     <title>Ninja Battle</title>
 
@@ -16,10 +19,15 @@
 
     <main class="game">
 
-        <!-- PERFIL -->
+        <!-- =====================================
+             BARRA SUPERIOR
+        ====================================== -->
+
         <header class="top-bar">
 
+            <!-- PERFIL -->
             <button id="profileButton" class="profile">
+
                 <div class="avatar">
                     <span id="avatarLetter">N</span>
                 </div>
@@ -28,98 +36,218 @@
                     <strong id="playerName">Ninja</strong>
                     <span id="playerLevel">Nivel 1</span>
                 </div>
+
             </button>
 
-            <!-- MENÚ -->
-            <button id="menuButton" class="menu-button" aria-label="Abrir menú">
-                ☰
-            </button>
+
+            <!-- MONEDAS / WALLET / TIENDA / MENÚ -->
+
+            <div class="top-actions">
+
+                <div class="coins">
+                    <span>🪙</span>
+                    <strong id="coinsText">1,250</strong>
+                </div>
+
+                <button
+                    id="walletButton"
+                    class="top-action wallet-action"
+                >
+                    💰
+                    <span>Wallet</span>
+                </button>
+
+                <button
+                    id="shopButton"
+                    class="top-action shop-action"
+                >
+                    🛒
+                    <span>Tienda</span>
+                </button>
+
+                <button
+                    id="menuButton"
+                    class="menu-button"
+                    aria-label="Abrir menú"
+                >
+                    ☰
+                </button>
+
+            </div>
 
         </header>
 
 
-        <!-- ZONA DEL ENEMIGO -->
+        <!-- =====================================
+             ZONA DE COMBATE
+        ====================================== -->
+
         <section class="battle-area">
+
+
+            <!-- INFORMACIÓN DEL ENEMIGO -->
 
             <div class="boss-info">
 
                 <div class="enemy-name">
-                    <span id="enemyType">JEFE</span>
-                    <h1 id="enemyName">Rey de las Sombras</h1>
+
+                    <!-- YA NO DICE JEFE -->
+                    <span id="enemyType">DEMONIO</span>
+
+                    <h1 id="enemyName">
+                        Akuma Rojo
+                    </h1>
+
                 </div>
+
+
+                <!-- VIDA -->
 
                 <div class="health-text">
+
                     <span>❤️</span>
-                    <span id="enemyHealthText">10,000 / 10,000</span>
+
+                    <span id="enemyHealthText">
+                        10,000 / 10,000
+                    </span>
+
                 </div>
 
+
                 <div class="health-bar">
-                    <div id="enemyHealthBar" class="health-fill"></div>
+
+                    <div
+                        id="enemyHealthBar"
+                        class="health-fill"
+                    ></div>
+
                 </div>
 
             </div>
 
 
-            <!-- ENEMIGO -->
-            <div id="enemy" class="enemy">
+            <!-- =================================
+                 ENEMIGO
+            ================================== -->
+
+            <div
+                id="enemy"
+                class="enemy"
+            >
 
                 <div class="enemy-aura"></div>
 
+
                 <div class="enemy-character">
 
+
+                    <!-- CABEZA -->
+
                     <div class="enemy-head">
+
                         <div class="horn horn-left"></div>
+
                         <div class="horn horn-right"></div>
 
+
                         <div class="enemy-face">
+
                             <div class="eye eye-left"></div>
+
                             <div class="eye eye-right"></div>
+
                         </div>
+
                     </div>
+
+
+                    <!-- CUERPO -->
 
                     <div class="enemy-body">
 
-                        <div class="armor armor-left"></div>
-                        <div class="armor armor-right"></div>
+                        <div
+                            class="armor armor-left"
+                        ></div>
+
+                        <div
+                            class="armor armor-right"
+                        ></div>
+
 
                         <div class="chest-core"></div>
 
                     </div>
 
+
                     <div class="enemy-cloak"></div>
 
                 </div>
 
-                <div id="damageNumber" class="damage-number"></div>
+
+                <!-- DAÑO -->
+
+                <div
+                    id="damageNumber"
+                    class="damage-number"
+                ></div>
 
             </div>
 
         </section>
 
 
-        <!-- ENERGÍA -->
+        <!-- =====================================
+             ENERGÍA
+        ====================================== -->
+
         <section class="energy-section">
 
             <div class="energy-header">
-                <span>⚡ ENERGÍA</span>
-                <strong id="energyText">100 / 100</strong>
+
+                <span>
+                    ⚡ ENERGÍA
+                </span>
+
+                <strong id="energyText">
+                    100 / 100
+                </strong>
+
             </div>
 
+
             <div class="energy-bar">
-                <div id="energyBar" class="energy-fill"></div>
+
+                <div
+                    id="energyBar"
+                    class="energy-fill"
+                ></div>
+
             </div>
 
         </section>
 
 
-        <!-- ATAQUES -->
+        <!-- =====================================
+             ATAQUES
+        ====================================== -->
+
         <section class="attack-section">
 
-            <button id="comboButton" class="attack-button combo">
 
-                <span class="attack-icon">🔥</span>
+            <!-- COMBO -->
 
-                <strong>COMBO</strong>
+            <button
+                id="comboButton"
+                class="attack-button combo"
+            >
+
+                <span class="attack-icon">
+                    🔥
+                </span>
+
+                <strong>
+                    COMBO
+                </strong>
 
                 <small>
                     3 GOLPES
@@ -130,11 +258,20 @@
             </button>
 
 
-            <button id="attackButton" class="attack-button normal">
+            <!-- ATAQUE NORMAL -->
 
-                <span class="attack-icon">⚔️</span>
+            <button
+                id="attackButton"
+                class="attack-button normal"
+            >
 
-                <strong>ATAQUE</strong>
+                <span class="attack-icon">
+                    ⚔️
+                </span>
+
+                <strong>
+                    ATAQUE
+                </strong>
 
                 <small>
                     NORMAL
@@ -145,14 +282,23 @@
             </button>
 
 
-            <button id="criticalButton" class="attack-button critical">
+            <!-- CRÍTICO -->
 
-                <span class="attack-icon">💥</span>
+            <button
+                id="criticalButton"
+                class="attack-button critical"
+            >
 
-                <strong>CRÍTICO</strong>
+                <span class="attack-icon">
+                    💥
+                </span>
+
+                <strong>
+                    CRÍTICO
+                </strong>
 
                 <small>
-                    DAÑO ALTO
+                    PODER
                     <br>
                     -8 ⚡
                 </small>
@@ -162,102 +308,169 @@
         </section>
 
 
-        <!-- MONEDAS / WALLET -->
-        <section class="bottom-bar">
+        <!-- =====================================
+             MENÚ LATERAL
+        ====================================== -->
 
-            <div class="coins">
-                <span>🪙</span>
-                <strong id="coinsText">1,250</strong>
+        <aside
+            id="sideMenu"
+            class="side-menu"
+        >
+
+            <div class="menu-header">
+
+                <h2>
+                    Ninja Battle
+                </h2>
+
+                <button
+                    id="closeMenu"
+                    class="close-menu"
+                >
+                    ×
+                </button>
+
             </div>
 
-            <button id="walletButton" class="wallet-button">
-                💰 Wallet
-            </button>
 
-        </section>
+            <!-- PERFIL DEL MENÚ -->
+
+            <div class="menu-player">
+
+                <div class="menu-avatar">
+
+                    <span id="menuAvatarLetter">
+                        N
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong id="menuPlayerName">
+                        Ninja
+                    </strong>
+
+                    <span id="menuPlayerLevel">
+                        Nivel 1
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- OPCIONES -->
+
+            <nav class="menu-options">
+
+                <button id="profileMenuOption">
+
+                    👤
+
+                    <span>
+                        Perfil
+                    </span>
+
+                </button>
+
+
+                <button id="settingsMenuOption">
+
+                    ⚙️
+
+                    <span>
+                        Ajustes
+                    </span>
+
+                </button>
+
+
+                <button id="rewardsMenuOption">
+
+                    🎁
+
+                    <span>
+                        Recompensas
+                    </span>
+
+                </button>
+
+
+                <button id="adsMenuOption">
+
+                    📺
+
+                    <span>
+                        Ver anuncios
+                    </span>
+
+                </button>
+
+
+                <button id="referralsMenuOption">
+
+                    👥
+
+                    <span>
+                        Referidos
+                    </span>
+
+                </button>
+
+
+                <button id="partnersMenuOption">
+
+                    🤝
+
+                    <span>
+                        Socios
+                    </span>
+
+                </button>
+
+
+                <button id="missionsMenuOption">
+
+                    🎯
+
+                    <span>
+                        Misiones externas
+                    </span>
+
+                </button>
+
+
+                <button id="walletMenuOption">
+
+                    💰
+
+                    <span>
+                        Wallet TON
+                    </span>
+
+                </button>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- OSCURECER FONDO AL ABRIR MENÚ -->
+
+        <div
+            id="menuOverlay"
+            class="menu-overlay"
+        ></div>
 
     </main>
 
 
-    <!-- MENÚ LATERAL -->
-    <aside id="sideMenu" class="side-menu">
+    <!-- =====================================
+         JAVASCRIPT
+    ====================================== -->
 
-        <div class="menu-header">
-
-            <h2>Ninja Battle</h2>
-
-            <button id="closeMenu" class="close-menu">
-                ×
-            </button>
-
-        </div>
-
-
-        <div class="menu-player">
-
-            <div class="menu-avatar">
-                <span id="menuAvatarLetter">N</span>
-            </div>
-
-            <div>
-                <strong id="menuPlayerName">Ninja</strong>
-                <span id="menuPlayerLevel">Nivel 1</span>
-            </div>
-
-        </div>
-
-
-        <nav class="menu-options">
-
-            <button>
-                👤
-                <span>Perfil</span>
-            </button>
-
-            <button>
-                ⚙️
-                <span>Ajustes</span>
-            </button>
-
-            <button>
-                🎁
-                <span>Recompensas</span>
-            </button>
-
-            <button>
-                📺
-                <span>Ver anuncios</span>
-            </button>
-
-            <button>
-                👥
-                <span>Referidos</span>
-            </button>
-
-            <button>
-                🤝
-                <span>Socios</span>
-            </button>
-
-            <button>
-                🎯
-                <span>Misiones externas</span>
-            </button>
-
-            <button>
-                💰
-                <span>Wallet TON</span>
-            </button>
-
-        </nav>
-
-    </aside>
-
-
-    <div id="menuOverlay" class="menu-overlay"></div>
-
-
-    <!-- JAVASCRIPT -->
     <script src="script.js"></script>
 
 </body>
