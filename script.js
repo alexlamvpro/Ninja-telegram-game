@@ -224,7 +224,7 @@ function upgradeWeapon(weaponId) {
         }
 
         player.coins -= upgradeCost;
-    }
+     }
 
     // Subir un nivel
     weapon.level += 1;
@@ -235,14 +235,6 @@ function upgradeWeapon(weaponId) {
     // Actualizar la tienda
     openWeaponShop();
     
-    // Subir un nivel
-    weapon.level += 1;
-
-    // Aumentar el daño en 1 punto
-    weapon.damage += 1;
-
-    // Actualizar la tienda
-    openWeaponShop();
             }
 
 // ==========================================
