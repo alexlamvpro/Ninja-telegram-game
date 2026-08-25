@@ -215,7 +215,6 @@ function buyWeapon(weaponId) {
 
     equippedWeapon = weapon;
 
-    updateUI();
 
     openWeaponShop();
 
