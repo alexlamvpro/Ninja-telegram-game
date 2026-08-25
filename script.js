@@ -110,6 +110,118 @@ let equippedWeapon =
     weapons[0];
 
 // ==========================================
+// TIENDA DE ARMAS
+// ==========================================
+
+function openWeaponShop() {
+
+    const shop = document.getElementById("shop");
+
+    if (!shop) {
+        console.error("No se encontró el elemento #shop");
+        return;
+    }
+
+    shop.innerHTML = "";
+
+    weapons.forEach((weapon) => {
+
+        const card = document.createElement("div");
+
+        card.className = "weapon-card";
+
+        const isEquipped =
+            equippedWeapon.id === weapon.id;
+
+        const button = document.createElement("button");
+
+        if (isEquipped) {
+
+            button.textContent = "EQUIPADA";
+            button.disabled = true;
+
+        } else if (weapon.owned) {
+
+            button.textContent = "EQUIPAR";
+
+            button.onclick = () => {
+
+                equippedWeapon = weapon;
+
+                openWeaponShop();
+
+            };
+
+        } else {
+
+            button.textContent =
+                `COMPRAR — 🪙 ${weapon.price}`;
+
+            button.onclick = () => {
+
+                buyWeapon(weapon.id);
+
+            };
+
+        }
+
+        card.innerHTML = `
+            <h3>${weapon.name}</h3>
+            <p>Daño: ${weapon.damage}</p>
+            <p>Nivel: ${weapon.level}/${weapon.maxLevel}</p>
+        `;
+
+        card.appendChild(button);
+
+        shop.appendChild(card);
+
+    });
+
+}
+
+
+// ==========================================
+// COMPRAR ARMA
+// ==========================================
+
+function buyWeapon(weaponId) {
+
+    const weapon =
+        weapons.find(w => w.id === weaponId);
+
+    if (!weapon) return;
+
+    if (weapon.owned) {
+
+        equippedWeapon = weapon;
+
+        openWeaponShop();
+
+        return;
+
+    }
+
+    if (player.coins < weapon.price) {
+
+        alert("No tienes suficientes monedas.");
+
+        return;
+
+    }
+
+    player.coins -= weapon.price;
+
+    weapon.owned = true;
+
+    equippedWeapon = weapon;
+
+    updateUI();
+
+    openWeaponShop();
+
+}
+
+// ==========================================
 // ENEMIGOS NORMALES
 // ==========================================
 
