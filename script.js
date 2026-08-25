@@ -43,6 +43,71 @@ const player = {
 
 };
 
+// ==========================================
+// ARMAS
+// ==========================================
+
+const weapons = [
+
+    {
+        id: "kunai",
+        name: "Kunai",
+        price: 500,
+        damage: 2,
+        level: 1,
+        maxLevel: 10,
+        owned: true
+    },
+
+    {
+        id: "katana",
+        name: "Katana",
+        price: 2500,
+        damage: 3,
+        level: 1,
+        maxLevel: 15,
+        owned: false
+    },
+
+    {
+        id: "demonKatana",
+        name: "Katana Demoníaca",
+        price: 10000,
+        damage: 4,
+        level: 1,
+        maxLevel: 20,
+        owned: false
+    },
+
+    {
+        id: "shinigamiSword",
+        name: "Espada Shinigami",
+        price: 35000,
+        damage: 5,
+        level: 1,
+        maxLevel: 25,
+        owned: false
+    },
+
+    {
+        id: "voidSword",
+        name: "Espada del Vacío",
+        price: 100000,
+        damage: 6,
+        level: 1,
+        maxLevel: 30,
+        owned: false
+    }
+
+];
+
+
+// ==========================================
+// ARMA EQUIPADA
+// ==========================================
+
+let equippedWeapon =
+    weapons[0];
 
 // ==========================================
 // ENEMIGOS NORMALES
