@@ -178,7 +178,12 @@ function openWeaponShop() {
         const upgradeButton = document.createElement("button");
 
 if (weapon.level < weapon.maxLevel) {
+    if (weapon.id === "kunai") {
+    const upgradeCost = 100 * Math.pow(2, weapon.level - 1);
+    upgradeButton.textContent = `MEJORAR 🪙 ${upgradeCost}`;
+} else {
     upgradeButton.textContent = `MEJORAR ⚡ ${weapon.upgradeTon} TON`;
+    }
 
     upgradeButton.onclick = () => {
         upgradeWeapon(weapon.id);
