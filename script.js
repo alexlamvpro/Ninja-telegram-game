@@ -459,7 +459,7 @@ function haptic(type = "light") {
 function normalAttack() {
 
     const energyCost = 2;
-
+     );
     if (
         player.energy <
         energyCost
@@ -514,7 +514,7 @@ function normalAttack() {
 
 function comboAttack() {
 
-    const energyCost = 4;
+    const energyCost = 4; 
 
     if (
         player.energy <
@@ -615,10 +615,7 @@ function criticalAttack() {
 
     updateEnergy();
 
-    const damage =
-        randomNumber(
-            1250,
-            1900
+    const damage = 10;
         );
 
     enemy.health -=
