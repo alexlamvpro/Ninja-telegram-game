@@ -938,3 +938,190 @@ document
             "👥 Sistema de referidos"
         )
     );
+// ==========================================
+// RESTO DEL MENÚ
+// ==========================================
+
+document
+    .getElementById(
+        "partnersMenuOption"
+    )
+    ?.addEventListener(
+        "click",
+        () => menuMessage(
+            "🤝 Socios próximamente"
+        )
+    );
+
+document
+    .getElementById(
+        "missionsMenuOption"
+    )
+    ?.addEventListener(
+        "click",
+        () => menuMessage(
+            "🎯 Misiones próximamente"
+        )
+    );
+
+document
+    .getElementById(
+        "walletMenuOption"
+    )
+    ?.addEventListener(
+        "click",
+        () => menuMessage(
+            "💰 Wallet TON próximamente"
+        )
+    );
+
+
+// ==========================================
+// EVENTOS DE ATAQUE
+// ==========================================
+
+attackButton.addEventListener(
+    "click",
+    normalAttack
+);
+
+comboButton.addEventListener(
+    "click",
+    comboAttack
+);
+
+criticalButton.addEventListener(
+    "click",
+    criticalAttack
+);
+
+
+// ==========================================
+// EVENTOS DEL MENÚ
+// ==========================================
+
+menuButton.addEventListener(
+    "click",
+    openMenu
+);
+
+closeMenu.addEventListener(
+    "click",
+    closeSideMenu
+);
+
+menuOverlay.addEventListener(
+    "click",
+    closeSideMenu
+);
+
+
+// ==========================================
+// PERFIL
+// ==========================================
+
+profileButton.addEventListener(
+    "click",
+    () => {
+
+        showMessage(
+            `👤 ${player.name}`
+        );
+
+    }
+);
+
+
+// ==========================================
+// WALLET
+// ==========================================
+
+walletButton.addEventListener(
+    "click",
+    () => {
+
+        showMessage(
+            "💰 Wallet próximamente"
+        );
+
+    }
+);
+
+
+// ==========================================
+// TIENDA
+// ==========================================
+
+shopButton.addEventListener(
+    "click",
+    () => {
+
+        showMessage(
+            "🛒 Tienda próximamente"
+        );
+
+    }
+);
+
+
+// ==========================================
+// RECARGA DE ENERGÍA
+// ==========================================
+
+setInterval(() => {
+
+    if (
+        player.energy <
+        player.maxEnergy
+    ) {
+
+        player.energy++;
+
+        updateEnergy();
+    }
+
+}, 3000);
+
+
+// ==========================================
+// INICIALIZACIÓN
+// ==========================================
+
+function initGame() {
+
+    loadTelegramUser();
+
+    updatePlayerInterface();
+
+    updateEnergy();
+
+    updateCoins();
+
+    updateEnemyInterface();
+
+    enableAttacks();
+
+    console.log(
+        "Ninja Battle iniciado."
+    );
+}
+
+
+// ==========================================
+// INICIAR
+// ==========================================
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initGame
+    );
+
+} else {
+
+    initGame();
+}
