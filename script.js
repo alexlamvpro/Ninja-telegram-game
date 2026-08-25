@@ -289,7 +289,7 @@ const normalEnemies = [
     {
         type: "ONI",
         name: "Goraku",
-        health: 1300,
+        health: 130,
         maxHealth: 130,
         minDamage: 2,
         maxDamage: 4,
