@@ -340,3 +340,601 @@ function updateEnemyInterface() {
     enemyHealthBar.style.width =
         `${Math.max(0, percentage)}%`;
 }
+// ==========================================
+// MOSTRAR DAÑO
+// ==========================================
+
+function showDamage(amount, critical = false) {
+
+    damageNumber.textContent =
+        critical
+            ? `💥 ${amount}`
+            : `-${amount}`;
+
+    damageNumber.classList.remove("show");
+
+    void damageNumber.offsetWidth;
+
+    damageNumber.classList.add("show");
+
+    if (critical) {
+
+        damageNumber.style.color =
+            "#ff4d5e";
+
+        damageNumber.style.fontSize =
+            "38px";
+
+    } else {
+
+        damageNumber.style.color =
+            "#ffcc33";
+
+        damageNumber.style.fontSize =
+            "30px";
+    }
+}
+
+
+// ==========================================
+// ANIMACIÓN DE GOLPE
+// ==========================================
+
+function enemyHitAnimation(critical = false) {
+
+    enemyElement.classList.remove(
+        "enemy-hit",
+        "enemy-critical"
+    );
+
+    void enemyElement.offsetWidth;
+
+    if (critical) {
+
+        enemyElement.classList.add(
+            "enemy-critical"
+        );
+
+    } else {
+
+        enemyElement.classList.add(
+            "enemy-hit"
+        );
+    }
+
+    setTimeout(() => {
+
+        enemyElement.classList.remove(
+            "enemy-hit",
+            "enemy-critical"
+        );
+
+    }, 450);
+}
+
+
+// ==========================================
+// SONIDO / VIBRACIÓN
+// ==========================================
+
+function haptic(type = "light") {
+
+    if (
+        tg &&
+        tg.HapticFeedback
+    ) {
+
+        try {
+
+            if (type === "heavy") {
+
+                tg.HapticFeedback
+                    .impactOccurred("heavy");
+
+            } else if (type === "medium") {
+
+                tg.HapticFeedback
+                    .impactOccurred("medium");
+
+            } else {
+
+                tg.HapticFeedback
+                    .impactOccurred("light");
+            }
+
+        } catch (error) {
+
+            console.log(
+                "Haptic no disponible."
+            );
+        }
+    }
+}
+
+
+// ==========================================
+// ATAQUE NORMAL
+// ==========================================
+
+function normalAttack() {
+
+    const energyCost = 2;
+
+    if (
+        player.energy <
+        energyCost
+    ) {
+
+        showMessage(
+            "⚡ No tienes suficiente energía"
+        );
+
+        haptic("light");
+
+        return;
+    }
+
+    player.energy -=
+        energyCost;
+
+    const damage =
+        randomNumber(420, 620);
+
+    enemy.health -=
+        damage;
+
+    if (enemy.health < 0) {
+        enemy.health = 0;
+    }
+
+    player.totalDamage +=
+        damage;
+
+    updateEnergy();
+
+    updateEnemyInterface();
+
+    showDamage(
+        damage,
+        false
+    );
+
+    enemyHitAnimation(
+        false
+    );
+
+    haptic("medium");
+
+    checkEnemyDefeat();
+}
+
+
+// ==========================================
+// COMBO
+// ==========================================
+
+function comboAttack() {
+
+    const energyCost = 4;
+
+    if (
+        player.energy <
+        energyCost
+    ) {
+
+        showMessage(
+            "⚡ No tienes suficiente energía"
+        );
+
+        return;
+    }
+
+    player.energy -=
+        energyCost;
+
+    updateEnergy();
+
+    const hits = 3;
+
+    let totalDamage = 0;
+
+    for (
+        let i = 0;
+        i < hits;
+        i++
+    ) {
+
+        setTimeout(() => {
+
+            const damage =
+                randomNumber(
+                    260,
+                    420
+                );
+
+            enemy.health -=
+                damage;
+
+            if (
+                enemy.health < 0
+            ) {
+
+                enemy.health = 0;
+            }
+
+            totalDamage +=
+                damage;
+
+            player.totalDamage +=
+                damage;
+
+            updateEnemyInterface();
+
+            showDamage(
+                damage,
+                false
+            );
+
+            enemyHitAnimation(
+                false
+            );
+
+            haptic("light");
+
+            if (
+                i === hits - 1
+            ) {
+
+                checkEnemyDefeat();
+            }
+
+        }, i * 230);
+    }
+}
+
+
+// ==========================================
+// ATAQUE CRÍTICO
+// ==========================================
+
+function criticalAttack() {
+
+    const energyCost = 8;
+
+    if (
+        player.energy <
+        energyCost
+    ) {
+
+        showMessage(
+            "⚡ No tienes suficiente energía"
+        );
+
+        return;
+    }
+
+    player.energy -=
+        energyCost;
+
+    updateEnergy();
+
+    const damage =
+        randomNumber(
+            1250,
+            1900
+        );
+
+    enemy.health -=
+        damage;
+
+    if (
+        enemy.health < 0
+    ) {
+
+        enemy.health = 0;
+    }
+
+    player.totalDamage +=
+        damage;
+
+    updateEnemyInterface();
+
+    showDamage(
+        damage,
+        true
+    );
+
+    enemyHitAnimation(
+        true
+    );
+
+    haptic("heavy");
+
+    checkEnemyDefeat();
+}
+
+
+// ==========================================
+// COMPROBAR DERROTA
+// ==========================================
+
+function checkEnemyDefeat() {
+
+    if (
+        enemy.health > 0
+    ) {
+
+        return;
+    }
+
+    disableAttacks();
+
+    setTimeout(() => {
+
+        const reward =
+            enemy.reward;
+
+        player.coins +=
+            reward;
+
+        updateCoins();
+
+        showMessage(
+            `💰 +${reward} monedas`
+        );
+
+        setTimeout(() => {
+
+            nextEnemy();
+
+        }, 900);
+
+    }, 450);
+}
+
+
+// ==========================================
+// SIGUIENTE ENEMIGO
+// ==========================================
+
+function nextEnemy() {
+
+    enemyIndex++;
+
+    if (
+        enemyIndex >=
+        normalEnemies.length
+    ) {
+
+        enemyIndex = 0;
+    }
+
+    enemy = {
+        ...normalEnemies[enemyIndex]
+    };
+
+    updateEnemyInterface();
+
+    enableAttacks();
+
+    showMessage(
+        `${enemy.type}: ${enemy.name}`
+    );
+}
+
+
+// ==========================================
+// ACTIVAR / DESACTIVAR ATAQUES
+// ==========================================
+
+function disableAttacks() {
+
+    attackButton.disabled = true;
+
+    comboButton.disabled = true;
+
+    criticalButton.disabled = true;
+}
+
+function enableAttacks() {
+
+    attackButton.disabled = false;
+
+    comboButton.disabled = false;
+
+    criticalButton.disabled = false;
+}
+
+
+// ==========================================
+// NÚMERO ALEATORIO
+// ==========================================
+
+function randomNumber(
+    min,
+    max
+) {
+
+    return Math.floor(
+        Math.random() *
+        (max - min + 1)
+    ) + min;
+}
+
+
+// ==========================================
+// MENSAJE TEMPORAL
+// ==========================================
+
+let messageTimeout;
+
+function showMessage(text) {
+
+    let message =
+        document.getElementById(
+            "gameMessage"
+        );
+
+    if (!message) {
+
+        message =
+            document.createElement(
+                "div"
+            );
+
+        message.id =
+            "gameMessage";
+
+        message.style.position =
+            "fixed";
+
+        message.style.left =
+            "50%";
+
+        message.style.top =
+            "50%";
+
+        message.style.transform =
+            "translate(-50%, -50%)";
+
+        message.style.zIndex =
+            "200";
+
+        message.style.padding =
+            "12px 18px";
+
+        message.style.borderRadius =
+            "14px";
+
+        message.style.background =
+            "rgba(10,12,18,.94)";
+
+        message.style.border =
+            "1px solid rgba(255,255,255,.12)";
+
+        message.style.fontWeight =
+            "800";
+
+        message.style.fontSize =
+            "13px";
+
+        message.style.textAlign =
+            "center";
+
+        document.body.appendChild(
+            message
+        );
+    }
+
+    message.textContent =
+        text;
+
+    message.style.opacity =
+        "1";
+
+    clearTimeout(
+        messageTimeout
+    );
+
+    messageTimeout =
+        setTimeout(() => {
+
+            message.style.opacity =
+                "0";
+
+        }, 1300);
+}
+
+
+// ==========================================
+// MENÚ
+// ==========================================
+
+function openMenu() {
+
+    sideMenu.classList.add(
+        "open"
+    );
+
+    menuOverlay.classList.add(
+        "open"
+    );
+}
+
+function closeSideMenu() {
+
+    sideMenu.classList.remove(
+        "open"
+    );
+
+    menuOverlay.classList.remove(
+        "open"
+    );
+}
+
+
+// ==========================================
+// BOTONES DEL MENÚ
+// ==========================================
+
+function menuMessage(text) {
+
+    closeSideMenu();
+
+    showMessage(text);
+}
+
+document
+    .getElementById(
+        "profileMenuOption"
+    )
+    ?.addEventListener(
+        "click",
+        () => menuMessage(
+            "👤 Perfil"
+        )
+    );
+
+document
+    .getElementById(
+        "settingsMenuOption"
+    )
+    ?.addEventListener(
+        "click",
+        () => menuMessage(
+            "⚙️ Ajustes próximamente"
+        )
+    );
+
+document
+    .getElementById(
+        "rewardsMenuOption"
+    )
+    ?.addEventListener(
+        "click",
+        () => menuMessage(
+            "🎁 Recompensas próximamente"
+        )
+    );
+
+document
+    .getElementById(
+        "adsMenuOption"
+    )
+    ?.addEventListener(
+        "click",
+        () => menuMessage(
+            "📺 Anuncios próximamente"
+        )
+    );
+
+document
+    .getElementById(
+        "referralsMenuOption"
+    )
+    ?.addEventListener(
+        "click",
+        () => menuMessage(
+            "👥 Sistema de referidos"
+        )
+    );
