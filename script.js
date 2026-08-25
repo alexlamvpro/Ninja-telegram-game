@@ -66,6 +66,7 @@ const weapons = [
         damage: 3,
         level: 1,
         maxLevel: 15,
+        upgradeTon: 0.5,
         owned: false
     },
 
@@ -76,6 +77,7 @@ const weapons = [
         damage: 4,
         level: 1,
         maxLevel: 20,
+        upgradeTon: 1,
         owned: false
     },
 
@@ -86,6 +88,7 @@ const weapons = [
         damage: 5,
         level: 1,
         maxLevel: 25,
+        upgradeTon: 1.5,
         owned: false
     },
 
@@ -96,6 +99,7 @@ const weapons = [
         damage: 6,
         level: 1,
         maxLevel: 30,
+        upgradeTon: 2,
         owned: false
     }
 
