@@ -53,8 +53,8 @@ const normalEnemies = [
     {
         type: "DEMONIO",
         name: "Akuma Rojo",
-        health: 50,
-        maxHealth: 50,
+        health: 100,
+        maxHealth: 100,
         minDamage: 2,
         maxDamage: 3,
         reward: 100
@@ -63,8 +63,8 @@ const normalEnemies = [
     {
         type: "NINJA",
         name: "Kage Ren",
-        health: 60,
-        maxHealth: 60,
+        health: 100,
+        maxHealth: 100,
         minDamage: 2,
         maxDamage: 3,
         reward: 110
@@ -73,8 +73,8 @@ const normalEnemies = [
     {
         type: "SHINIGAMI",
         name: "Yoru",
-        health: 70,
-        maxHealth: 70,
+        health: 120,
+        maxHealth: 120,
         minDamage: 2,
         maxDamage: 3,
         reward: 110
@@ -83,8 +83,8 @@ const normalEnemies = [
     {
         type: "ONI",
         name: "Goraku",
-        health: 80,
-        maxHealth: 80,
+        health: 1300,
+        maxHealth: 130,
         minDamage: 2,
         maxDamage: 4,
         reward: 120
@@ -93,8 +93,8 @@ const normalEnemies = [
     {
         type: "GUERRERO OSCURO",
         name: "Kurojin",
-        health: 80,
-        maxHealth: 80,
+        health: 150,
+        maxHealth: 150,
         minDamage: 2,
         maxDamage: 4,
         reward: 130
@@ -103,8 +103,8 @@ const normalEnemies = [
     {
         type: "DEMONIO",
         name: "Raizen",
-        health: 90,
-        maxHealth: 90,
+        health: 180,
+        maxHealth: 180,
         minDamage: 2,
         maxDamage: 4,
         reward: 140
@@ -113,8 +113,8 @@ const normalEnemies = [
     {
         type: "SHINIGAMI",
         name: "Kurohane",
-        health: 100,
-        maxHealth: 100,
+        health: 200,
+        maxHealth: 200,
         minDamage: 2,
         maxDamage: 4,
         reward: 200
