@@ -254,3 +254,415 @@ button {
 
     font-size: 22px;
     }
+.battle-area {
+    position: relative;
+    z-index: 1;
+
+    flex: 1;
+    min-height: 360px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 18px 18px 5px;
+}
+
+.boss-info {
+    position: absolute;
+
+    top: 8px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: min(340px, 72%);
+
+    text-align: center;
+    z-index: 5;
+}
+
+.enemy-name span {
+    color: #ff5968;
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.enemy-name h1 {
+    margin-top: 2px;
+
+    font-size: 15px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.health-text {
+    margin-top: 5px;
+
+    display: flex;
+    justify-content: center;
+
+    gap: 4px;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.health-bar {
+    width: 100%;
+    height: 8px;
+
+    margin-top: 4px;
+
+    border-radius: 20px;
+    overflow: hidden;
+
+    background: #292c35;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.07);
+}
+
+.health-fill {
+    width: 100%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            #8f1420,
+            #ff3347
+        );
+
+    box-shadow:
+        0 0 12px
+        rgba(255, 51, 71, 0.35);
+
+    transition:
+        width 0.2s ease;
+}
+
+.enemy {
+    position: relative;
+
+    width: min(250px, 63vw);
+    height: 250px;
+
+    margin-top: 60px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.enemy-aura {
+    position: absolute;
+
+    width: 205px;
+    height: 205px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(155, 17, 30, 0.30),
+            rgba(112, 19, 32, 0.12) 42%,
+            transparent 70%
+        );
+
+    animation:
+        auraPulse 2.2s
+        infinite
+        ease-in-out;
+}
+
+.enemy-character {
+    position: relative;
+
+    width: 170px;
+    height: 220px;
+
+    filter:
+        drop-shadow(
+            0 20px 30px
+            rgba(0, 0, 0, 0.65)
+        );
+
+    animation:
+        enemyFloat 3s
+        infinite
+        ease-in-out;
+}
+
+.enemy-head {
+    position: absolute;
+
+    top: 5px;
+    left: 35px;
+
+    width: 100px;
+    height: 92px;
+
+    border-radius:
+        45%
+        45%
+        42%
+        42%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #3a3f4c,
+            #101219 70%
+        );
+
+    border:
+        3px solid
+        #555b69;
+
+    z-index: 4;
+}
+
+.enemy-face {
+    position: absolute;
+
+    left: 16px;
+    right: 16px;
+    top: 32px;
+
+    height: 40px;
+
+    background: #08090d;
+    border-radius: 50%;
+}
+
+.eye {
+    position: absolute;
+
+    top: 14px;
+
+    width: 18px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #ff3347;
+
+    box-shadow:
+        0 0 12px
+        rgba(255, 51, 71, 0.9);
+}
+
+.eye-left {
+    left: 15px;
+    transform: rotate(10deg);
+}
+
+.eye-right {
+    right: 15px;
+    transform: rotate(-10deg);
+}
+
+.horn {
+    position: absolute;
+
+    width: 28px;
+    height: 52px;
+
+    top: -36px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #252833,
+            #747b89
+        );
+
+    border-radius:
+        70%
+        30%
+        0
+        0;
+
+    z-index: -1;
+}
+
+.horn-left {
+    left: 2px;
+    transform: rotate(-25deg);
+}
+
+.horn-right {
+    right: 2px;
+    transform: rotate(25deg);
+}
+
+.enemy-body {
+    position: absolute;
+
+    top: 82px;
+    left: 10px;
+
+    width: 150px;
+    height: 128px;
+
+    border-radius:
+        35px
+        35px
+        20px
+        20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #252a35,
+            #101219 50%,
+            #292e3a
+        );
+
+    border:
+        3px solid
+        #454b58;
+}
+
+.chest-core {
+    position: absolute;
+
+    width: 46px;
+    height: 46px;
+
+    left: 50%;
+    top: 35px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            #ff5260,
+            #650d17 65%,
+            #1b0b0f
+        );
+
+    box-shadow:
+        0 0 28px
+        rgba(255, 51, 71, 0.55);
+}
+
+.armor {
+    position: absolute;
+
+    top: 12px;
+
+    width: 43px;
+    height: 82px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #4b5260,
+            #171a22
+        );
+
+    border:
+        2px solid
+        #626978;
+}
+
+.armor-left {
+    left: -24px;
+
+    transform: rotate(14deg);
+
+    border-radius:
+        20px
+        8px
+        15px
+        20px;
+}
+
+.armor-right {
+    right: -24px;
+
+    transform: rotate(-14deg);
+
+    border-radius:
+        8px
+        20px
+        20px
+        15px;
+}
+
+.enemy-cloak {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 174px;
+    height: 88px;
+
+    background:
+        linear-gradient(
+            160deg,
+            #161923,
+            #050609
+        );
+
+    clip-path:
+        polygon(
+            10% 0,
+            90% 0,
+            100% 100%,
+            0 100%
+        );
+
+    border-top:
+        2px solid
+        #343947;
+}
+
+.damage-number {
+    position: absolute;
+
+    top: 20px;
+    right: 0;
+
+    z-index: 20;
+
+    font-size: 30px;
+    font-weight: 900;
+
+    color: #ffcc33;
+
+    text-shadow:
+        0 2px 0 #000,
+        0 0 15px
+        rgba(255, 204, 51, 0.7);
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.damage-number.show {
+    animation:
+        damagePop
+        0.65s
+        ease-out
+        forwards;
+}
