@@ -1254,15 +1254,8 @@ walletButton.addEventListener(
 
 shopButton.addEventListener(
     "click",
-    () => {
-
-        showMessage(
-            "🛒 Tienda próximamente"
-        );
-
-    }
+    openShop
 );
-
 
 // ==========================================
 // RECARGA DE ENERGÍA
