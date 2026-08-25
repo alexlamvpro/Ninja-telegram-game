@@ -213,6 +213,28 @@ function upgradeWeapon(weaponId) {
         return;
     }
 
+        // Costo de mejora solo para la Kunai
+    if (weapon.id === "kunai") {
+
+        const upgradeCost = 100 * Math.pow(2, weapon.level - 1);
+
+        if (player.coins < upgradeCost) {
+            alert("No tienes suficientes monedas.");
+            return;
+        }
+
+        player.coins -= upgradeCost;
+    }
+
+    // Subir un nivel
+    weapon.level += 1;
+
+    // Aumentar el daño en 1 punto
+    weapon.damage += 1;
+
+    // Actualizar la tienda
+    openWeaponShop();
+    
     // Subir un nivel
     weapon.level += 1;
 
