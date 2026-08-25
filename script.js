@@ -55,69 +55,69 @@ const normalEnemies = [
         name: "Akuma Rojo",
         health: 50,
         maxHealth: 50,
-        minDamage: 80,
-        maxDamage: 130,
-        reward: 180
+        minDamage: 2,
+        maxDamage: 3,
+        reward: 100
     },
 
     {
         type: "NINJA",
         name: "Kage Ren",
-        health: 5500,
-        maxHealth: 5500,
-        minDamage: 90,
-        maxDamage: 140,
-        reward: 210
+        health: 60,
+        maxHealth: 60,
+        minDamage: 2,
+        maxDamage: 3,
+        reward: 110
     },
 
     {
         type: "SHINIGAMI",
         name: "Yoru",
-        health: 6000,
-        maxHealth: 6000,
-        minDamage: 100,
-        maxDamage: 150,
-        reward: 240
+        health: 70,
+        maxHealth: 70,
+        minDamage: 2,
+        maxDamage: 3,
+        reward: 110
     },
 
     {
         type: "ONI",
         name: "Goraku",
-        health: 7000,
-        maxHealth: 7000,
-        minDamage: 110,
-        maxDamage: 165,
-        reward: 280
+        health: 80,
+        maxHealth: 80,
+        minDamage: 2,
+        maxDamage: 4,
+        reward: 120
     },
 
     {
         type: "GUERRERO OSCURO",
         name: "Kurojin",
-        health: 7500,
-        maxHealth: 7500,
-        minDamage: 120,
-        maxDamage: 180,
-        reward: 320
+        health: 80,
+        maxHealth: 100,
+        minDamage: 2,
+        maxDamage: 4,
+        reward: 130
     },
 
     {
         type: "DEMONIO",
         name: "Raizen",
-        health: 8000,
-        maxHealth: 8000,
-        minDamage: 125,
-        maxDamage: 190,
-        reward: 360
+        health: 90,
+        maxHealth: 120,
+        minDamage: 2,
+        maxDamage: 4,
+        reward: 140
     },
 
     {
         type: "SHINIGAMI",
         name: "Kurohane",
-        health: 8500,
-        maxHealth: 8500,
-        minDamage: 130,
-        maxDamage: 200,
-        reward: 400
+        health: 100,
+        maxHealth: 150,
+        minDamage: 2,
+        maxDamage: 4,
+        reward: 200
     }
 
 ];
