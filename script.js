@@ -53,8 +53,8 @@ const normalEnemies = [
     {
         type: "DEMONIO",
         name: "Akuma Rojo",
-        health: 5000,
-        maxHealth: 5000,
+        health: 50,
+        maxHealth: 50,
         minDamage: 80,
         maxDamage: 130,
         reward: 180
@@ -477,8 +477,7 @@ function normalAttack() {
     player.energy -=
         energyCost;
 
-    const damage =
-        randomNumber(420, 620);
+    const damage = 2;
 
     enemy.health -=
         damage;
@@ -546,11 +545,9 @@ function comboAttack() {
 
         setTimeout(() => {
 
-            const damage =
-                randomNumber(
-                    260,
-                    420
-                );
+            const comboDamage = [1, 2, 2];
+const damage = comboDamage[i];
+                
 
             enemy.health -=
                 damage;
