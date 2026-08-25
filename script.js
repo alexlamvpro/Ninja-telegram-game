@@ -222,6 +222,44 @@ function buyWeapon(weaponId) {
 }
 
 // ==========================================
+// ABRIR Y CERRAR TIENDA
+// ==========================================
+
+function openShop() {
+    const shop = document.getElementById("shop");
+
+    if (!shop) return;
+
+    shop.style.display = "block";
+
+    const coins = document.getElementById("shopCoins");
+
+    if (coins) {
+        coins.textContent = player.coins;
+    }
+
+    openWeaponShop();
+}
+
+function closeShop() {
+    const shop = document.getElementById("shop");
+
+    if (!shop) return;
+
+    shop.style.display = "none";
+}
+
+
+// ==========================================
+// BOTÓN TIENDA
+// ==========================================
+
+const shopButton = document.getElementById("shopButton");
+
+if (shopButton) {
+    shopButton.addEventListener("click", openShop);
+}
+// ==========================================
 // ENEMIGOS NORMALES
 // ==========================================
 
