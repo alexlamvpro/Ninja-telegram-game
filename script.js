@@ -197,6 +197,31 @@ card.appendChild(upgradeButton);
 
 }
 
+function upgradeWeapon(weaponId) {
+
+    const weapon = weapons.find(w => w.id === weaponId);
+
+    if (!weapon) return;
+
+    if (!weapon.owned) {
+        alert("Primero debes comprar esta arma.");
+        return;
+    }
+
+    if (weapon.level >= weapon.maxLevel) {
+        alert("Esta arma ya está en nivel máximo.");
+        return;
+    }
+
+    // Subir un nivel
+    weapon.level += 1;
+
+    // Aumentar el daño en 1 punto
+    weapon.damage += 1;
+
+    // Actualizar la tienda
+    openWeaponShop();
+            }
 
 // ==========================================
 // COMPRAR ARMA
