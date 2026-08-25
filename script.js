@@ -175,6 +175,20 @@ function openWeaponShop() {
             <p>Nivel: ${weapon.level}/${weapon.maxLevel}</p>
         `;
 
+        const upgradeButton = document.createElement("button");
+
+if (weapon.level < weapon.maxLevel) {
+    upgradeButton.textContent = `MEJORAR ⚡ ${weapon.upgradeTon} TON`;
+
+    upgradeButton.onclick = () => {
+        upgradeWeapon(weapon.id);
+    };
+} else {
+    upgradeButton.textContent = "NIVEL MÁXIMO";
+    upgradeButton.disabled = true;
+}
+
+card.appendChild(upgradeButton);
         card.appendChild(button);
 
         shop.appendChild(card);
