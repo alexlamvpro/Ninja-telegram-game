@@ -1,18 +1,11 @@
 // ==========================================
 // NINJA BATTLE
-// Telegram Mini App
-// Sistema principal de combate
-// ==========================================
-
-
-// ==========================================
-// TELEGRAM
+// SISTEMA PRINCIPAL
 // ==========================================
 
 const tg = window.Telegram?.WebApp;
 
 if (tg) {
-
     tg.ready();
     tg.expand();
 
@@ -47,17 +40,13 @@ const player = {
     coins: 1250,
 
     totalDamage: 0
+
 };
 
 
 // ==========================================
 // ENEMIGOS NORMALES
 // ==========================================
-//
-// Los jefes NO están aquí.
-// Los jefes estarán reservados para
-// el evento especial de cada 10 días.
-//
 
 const normalEnemies = [
 
@@ -135,15 +124,10 @@ const normalEnemies = [
 
 
 // ==========================================
-// ÍNDICE DEL ENEMIGO
+// ENEMIGO ACTUAL
 // ==========================================
 
 let enemyIndex = 0;
-
-
-// ==========================================
-// ENEMIGO ACTUAL
-// ==========================================
 
 let enemy = {
     ...normalEnemies[enemyIndex]
@@ -245,7 +229,7 @@ function loadTelegramUser() {
 
     if (!user) {
         console.log(
-            "No se encontraron datos del usuario de Telegram."
+            "No se encontraron datos de Telegram."
         );
 
         return;
@@ -356,70 +340,3 @@ function updateEnemyInterface() {
     enemyHealthBar.style.width =
         `${Math.max(0, percentage)}%`;
 }
-
-
-// ==========================================
-// NÚMERO ALEATORIO
-// ==========================================
-
-function randomNumber(min, max) {
-
-    return Math.floor(
-        Math.random() *
-        (max - min + 1)
-    ) + min;
-}
-
-
-// ==========================================
-// MOSTRAR DAÑO
-// ==========================================
-
-function showDamage(
-    amount,
-    critical = false
-) {
-
-    damageNumber.textContent =
-        critical
-            ? `💥 -${amount}`
-            : `-${amount}`;
-
-    damageNumber.classList.remove(
-        "show"
-    );
-
-    void damageNumber.offsetWidth;
-
-    damageNumber.classList.add(
-        "show"
-    );
-}
-
-
-// ==========================================
-// ANIMACIÓN DE GOLPE
-// ==========================================
-
-function normalHitAnimation() {
-
-    if (!enemyElement) {
-        return;
-    }
-
-    enemyElement.animate(
-
-        [
-
-            {
-                transform:
-                    "translateX(0) scale(1)"
-            },
-
-            {
-                transform:
-                    "translateX(-14px) scale(1.04)"
-            },
-
-            {
-               
