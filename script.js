@@ -115,7 +115,7 @@ let equippedWeapon =
 
 function openWeaponShop() {
 
-    const shop = document.getElementById("shop");
+    const shop = document.getElementById("shopWeapons");
 
     if (!shop) {
         console.error("No se encontró el elemento #shop");
