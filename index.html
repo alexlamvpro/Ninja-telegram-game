@@ -3,14 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Ninja Battle</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h1>Ninja Battle</h1>
+    <main class="game">
 
-    <p>Proyecto iniciado correctamente.</p>
+        <!-- PERFIL -->
+        <button class="top-button profile-button" id="profileButton">
+            👤
+            <span>Perfil</span>
+        </button>
+
+        <!-- MISIONES -->
+        <button class="top-button missions-button" id="missionsButton">
+            📜
+            <span>Misiones</span>
+        </button>
+
+        <!-- VIDA DEL ENEMIGO -->
+        <section class="enemy-health">
+            <div class="health-info">
+                <span>👹 Enemigo</span>
+                <span id="enemyHealthText">100 / 100</span>
+            </div>
+
+            <div class="health-bar">
+                <div class="health-fill" id="enemyHealthBar"></div>
+            </div>
+        </section>
+
+        <!-- ENEMIGO -->
+        <section class="enemy-area">
+            <div class="enemy" id="enemy">
+                👹
+            </div>
+
+            <h2 id="enemyName">Guerrero Demonio</h2>
+            <p id="enemyLevel">Nivel 1</p>
+        </section>
+
+        <!-- ENERGÍA DEL JUGADOR -->
+        <section class="energy">
+            <div class="energy-info">
+                <span>⚡ Energía</span>
+                <span id="energyText">100 / 100</span>
+            </div>
+
+            <div class="energy-bar">
+                <div class="energy-fill" id="energyBar"></div>
+            </div>
+        </section>
+
+        <!-- BOTONES DE COMBATE -->
+        <section class="combat-buttons">
+
+            <button
+                class="combat-button critical-button"
+                id="criticalButton"
+            >
+                💥
+                <span>Crítico</span>
+            </button>
+
+            <button
+                class="combat-button attack-button"
+                id="attackButton"
+            >
+                ⚔️
+                <span>ATAQUE</span>
+            </button>
+
+            <button
+                class="combat-button combo-button"
+                id="comboButton"
+            >
+                🔥
+                <span>Combo</span>
+            </button>
+
+        </section>
+
+        <!-- WALLET -->
+        <button class="wallet-button" id="walletButton">
+            👛 Conectar Wallet
+        </button>
+
+    </main>
+
+    <script src="script.js"></script>
 
 </body>
 </html>
