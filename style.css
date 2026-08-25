@@ -5,14 +5,18 @@
 }
 
 :root {
-    --bg: #08090d;
+    --bg: #07080c;
     --panel: #11131a;
-    --panel-light: #181b24;
+    --panel-light: #191c25;
     --text: #ffffff;
-    --muted: #9da3b4;
+    --muted: #9ca3b4;
+
     --red: #ff3347;
-    --energy: #19bfff;
+    --red-dark: #8f1420;
+
+    --energy: #18bfff;
     --gold: #ffc928;
+    --purple: #a855f7;
 }
 
 html,
@@ -26,9 +30,11 @@ body {
 
 body {
     min-height: 100vh;
+    min-height: 100dvh;
     overflow-x: hidden;
     user-select: none;
     -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 button {
@@ -41,629 +47,182 @@ button {
 
 .game {
     position: relative;
+
     width: 100%;
     min-height: 100vh;
     min-height: 100dvh;
+
     display: flex;
     flex-direction: column;
+
     overflow: hidden;
+
     background:
-        radial-gradient(circle at 50% 35%, rgba(92, 25, 35, 0.20), transparent 32%),
-        linear-gradient(180deg, #10121a 0%, #08090d 65%, #050609 100%);
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(100, 20, 35, 0.20),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #11131a 0%,
+            #08090d 65%,
+            #050609 100%
+        );
 }
 
-/* =========================
-   TOP BAR
-========================= */
+
+/* ==================================================
+   BARRA SUPERIOR
+================================================== */
 
 .top-bar {
+    position: relative;
+    z-index: 20;
+
     width: 100%;
-    min-height: 74px;
-    padding: 12px 14px;
+
+    min-height: 94px;
+
+    padding-top: max(
+        18px,
+        env(safe-area-inset-top)
+    );
+
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 10px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: relative;
-    z-index: 10;
+
+    gap: 8px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(7, 8, 12, 0.96),
+            rgba(7, 8, 12, 0.65)
+        );
+
+    border-bottom: 1px solid rgba(
+        255,
+        255,
+        255,
+        0.05
+    );
 }
+
+
+/* PERFIL */
 
 .profile {
+    min-width: 0;
+
     display: flex;
     align-items: center;
-    gap: 10px;
+
+    gap: 8px;
+
     background: transparent;
+
     text-align: left;
+
+    flex-shrink: 1;
 }
 
-.avatar,
-.menu-avatar {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
+.avatar {
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+    border-radius: 50%;
+
     background:
-        linear-gradient(145deg, #2d3342, #11131a);
-    border: 2px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 0 18px rgba(255, 255, 255, 0.08);
-    font-size: 20px;
+        linear-gradient(
+            145deg,
+            #343a48,
+            #11131a
+        );
+
+    border: 2px solid rgba(
+        255,
+        255,
+        255,
+        0.16
+    );
+
+    font-size: 17px;
     font-weight: 900;
 }
 
 .profile-info {
+    min-width: 0;
+
     display: flex;
     flex-direction: column;
-    gap: 3px;
+
+    gap: 2px;
 }
 
 .profile-info strong {
-    font-size: 15px;
+    max-width: 90px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 13px;
 }
 
 .profile-info span {
     color: var(--muted);
-    font-size: 12px;
-}
 
-.menu-button {
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 26px;
-}
-
-/* =========================
-   BATTLE AREA
-========================= */
-
-.battle-area {
-    position: relative;
-    flex: 1;
-    min-height: 360px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 20px 10px;
-}
-
-.boss-info {
-    width: min(430px, 90%);
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 5;
-    text-align: center;
-}
-
-.enemy-name span {
-    color: #ff5968;
     font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 2px;
 }
 
-.enemy-name h1 {
-    margin-top: 4px;
-    font-size: clamp(17px, 5vw, 23px);
-    font-weight: 900;
-    text-transform: uppercase;
-}
 
-.health-text {
-    margin-top: 8px;
+/* ACCIONES SUPERIORES */
+
+.top-actions {
     display: flex;
-    justify-content: center;
+    align-items: center;
+
     gap: 5px;
-    font-size: 12px;
-    font-weight: 700;
-}
 
-.health-bar,
-.energy-bar {
-    width: 100%;
-    height: 12px;
-    margin-top: 7px;
-    border-radius: 20px;
-    overflow: hidden;
-    background: #272a33;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.health-fill {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, #9b111e, #ff3347);
-    border-radius: inherit;
-    transition: width 0.25s ease;
-    box-shadow: 0 0 15px rgba(255, 51, 71, 0.35);
-}
-
-/* =========================
-   ENEMY
-========================= */
-
-.enemy {
-    position: relative;
-    width: min(280px, 68vw);
-    height: 270px;
-    margin-top: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.enemy-aura {
-    position: absolute;
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    background:
-        radial-gradient(
-            circle,
-            rgba(155, 17, 30, 0.30) 0%,
-            rgba(112, 19, 32, 0.12) 42%,
-            transparent 70%
-        );
-    animation: auraPulse 2.2s infinite ease-in-out;
-}
-
-.enemy-character {
-    position: relative;
-    width: 180px;
-    height: 230px;
-    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.65));
-    animation: enemyFloat 3s infinite ease-in-out;
-}
-
-.enemy-head {
-    position: absolute;
-    top: 5px;
-    left: 40px;
-    width: 100px;
-    height: 95px;
-    border-radius: 45% 45% 42% 42%;
-    background:
-        linear-gradient(145deg, #363b47, #11131a 70%);
-    border: 3px solid #555b69;
-    z-index: 4;
-}
-
-.enemy-face {
-    position: absolute;
-    left: 16px;
-    right: 16px;
-    top: 32px;
-    height: 40px;
-    background: #08090d;
-    border-radius: 50%;
-}
-
-.eye {
-    position: absolute;
-    top: 14px;
-    width: 18px;
-    height: 7px;
-    border-radius: 50%;
-    background: #ff3347;
-    box-shadow: 0 0 12px #ff3347;
-}
-
-.eye-left {
-    left: 15px;
-    transform: rotate(10deg);
-}
-
-.eye-right {
-    right: 15px;
-    transform: rotate(-10deg);
-}
-
-.horn {
-    position: absolute;
-    width: 30px;
-    height: 55px;
-    top: -38px;
-    background: linear-gradient(90deg, #252833, #747b89);
-    border-radius: 70% 30% 0 0;
-    z-index: -1;
-}
-
-.horn-left {
-    left: 2px;
-    transform: rotate(-25deg);
-}
-
-.horn-right {
-    right: 2px;
-    transform: rotate(25deg);
-}
-
-.enemy-body {
-    position: absolute;
-    top: 82px;
-    left: 15px;
-    width: 150px;
-    height: 130px;
-    border-radius: 35px 35px 20px 20px;
-    background:
-        linear-gradient(
-            135deg,
-            #252a35 0%,
-            #101219 50%,
-            #292e3a 100%
-        );
-    border: 3px solid #454b58;
-}
-
-.chest-core {
-    position: absolute;
-    width: 48px;
-    height: 48px;
-    left: 50%;
-    top: 35px;
-    transform: translateX(-50%);
-    border-radius: 50%;
-    background: radial-gradient(circle, #ff5260, #650d17 65%, #1b0b0f);
-    box-shadow: 0 0 28px rgba(255, 51, 71, 0.55);
-}
-
-.armor {
-    position: absolute;
-    top: 12px;
-    width: 45px;
-    height: 85px;
-    background: linear-gradient(145deg, #4b5260, #171a22);
-    border: 2px solid #626978;
-}
-
-.armor-left {
-    left: -24px;
-    transform: rotate(14deg);
-    border-radius: 20px 8px 15px 20px;
-}
-
-.armor-right {
-    right: -24px;
-    transform: rotate(-14deg);
-    border-radius: 8px 20px 20px 15px;
-}
-
-.enemy-cloak {
-    position: absolute;
-    left: 3px;
-    bottom: 0;
-    width: 174px;
-    height: 90px;
-    background:
-        linear-gradient(160deg, #161923, #050609);
-    clip-path: polygon(10% 0, 90% 0, 100% 100%, 0 100%);
-    border-top: 2px solid #343947;
-}
-
-.damage-number {
-    position: absolute;
-    top: 20px;
-    right: 5px;
-    z-index: 20;
-    font-size: 32px;
-    font-weight: 900;
-    color: #ffcc33;
-    text-shadow:
-        0 2px 0 #000,
-        0 0 15px rgba(255, 204, 51, 0.7);
-    opacity: 0;
-    pointer-events: none;
-}
-
-.damage-number.show {
-    animation: damagePop 0.65s ease-out forwards;
-}
-
-/* =========================
-   ENERGY
-========================= */
-
-.energy-section {
-    width: min(520px, 90%);
-    margin: 0 auto;
-    padding: 8px 0 14px;
-}
-
-.energy-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-}
-
-.energy-header strong {
-    color: var(--energy);
-}
-
-.energy-fill {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, #087fb1, #1cc8ff);
-    border-radius: inherit;
-    transition: width 0.25s ease;
-    box-shadow: 0 0 15px rgba(25, 191, 255, 0.3);
-}
-
-/* =========================
-   ATTACKS
-========================= */
-
-.attack-section {
-    width: min(560px, 94%);
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 9px;
-    padding: 6px 0;
-}
-
-.attack-button {
-    min-height: 82px;
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    background: linear-gradient(180deg, #1b1e27, #0e1016);
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    box-shadow: inset 0 1px rgba(255, 255, 255, 0.04);
-    transition: transform 0.08s ease, background 0.15s ease;
-}
-
-.attack-button:active {
-    transform: scale(0.94);
-}
-
-.attack-icon {
-    font-size: 24px;
-}
-
-.attack-button strong {
-    font-size: 11px;
-}
-
-.attack-button small {
-    color: var(--muted);
-    font-size: 8px;
-    line-height: 1.3;
-    text-align: center;
-}
-
-.attack-button.combo {
-    border-color: rgba(255, 105, 25, 0.25);
-}
-
-.attack-button.normal {
-    border-color: rgba(60, 150, 255, 0.25);
-}
-
-.attack-button.critical {
-    border-color: rgba(255, 60, 70, 0.35);
-}
-
-/* =========================
-   BOTTOM
-========================= */
-
-.bottom-bar {
-    width: min(560px, 94%);
-    margin: 0 auto;
-    padding: 10px 0 calc(12px + env(safe-area-inset-bottom));
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-shrink: 0;
 }
 
 .coins {
     display: flex;
     align-items: center;
-    gap: 7px;
-    font-size: 15px;
-}
 
-.wallet-button {
-    padding: 10px 16px;
-    border-radius: 12px;
-    background: rgba(255, 201, 40, 0.10);
-    border: 1px solid rgba(255, 201, 40, 0.25);
-    color: #ffd84c;
-}
-
-/* =========================
-   SIDE MENU
-========================= */
-
-.side-menu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: min(320px, 88vw);
-    height: 100vh;
-    height: 100dvh;
-    z-index: 100;
-    padding: 20px;
-    background: #0d0f15;
-    border-left: 1px solid rgba(255, 255, 255, 0.10);
-    transform: translateX(105%);
-    transition: transform 0.25s ease;
-    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.45);
-}
-
-.side-menu.open {
-    transform: translateX(0);
-}
-
-.menu-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.menu-header h2 {
-    font-size: 20px;
-}
-
-.close-menu {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.07);
-    font-size: 28px;
-}
-
-.menu-player {
-    margin-top: 25px;
-    padding: 15px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #151821;
-}
-
-.menu-player > div:last-child {
-    display: flex;
-    flex-direction: column;
     gap: 4px;
-}
 
-.menu-player span {
-    color: var(--muted);
-    font-size: 12px;
-}
+    padding: 7px 7px;
 
-.menu-options {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
+    border-radius: 10px;
 
-.menu-options button {
-    width: 100%;
-    min-height: 50px;
-    padding: 0 14px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    text-align: left;
-    border-radius: 12px;
-    background: transparent;
-}
+    background: rgba(
+        255,
+        201,
+        40,
+        0.08
+    );
 
-.menu-options button:hover,
-.menu-options button:active {
-    background: rgba(255, 255, 255, 0.07);
-}
+    border: 1px solid rgba(
+        255,
+        201,
+        40,
+        0.15
+    );
 
-.menu-options button span {
-    font-size: 14px;
-}
+    font-size: 11px;
 
-.menu-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 90;
-    background: rgba(0, 0, 0, 0.55);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-}
-
-.menu-overlay.open {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* =========================
-   ANIMATIONS
-========================= */
-
-@keyframes enemyFloat {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-8px);
-    }
-}
-
-@keyframes auraPulse {
-    0%,
-    100% {
-        transform: scale(0.92);
-        opacity: 0.6;
-    }
-
-    50% {
-        transform: scale(1.08);
-        opacity: 1;
-    }
-}
-
-@keyframes damagePop {
-    0% {
-        opacity: 0;
-        transform: translateY(15px) scale(0.7);
-    }
-
-    20% {
-        opacity: 1;
-        transform: translateY(0) scale(1.15);
-    }
-
-    100% {
-        opacity: 0;
-        transform: translateY(-55px) scale(1);
-    }
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-height: 700px) {
-    .top-bar {
-        min-height: 62px;
-        padding-top: 8px;
-    }
-
-    .battle-area {
-        min-height: 315px;
-    }
-
-    .enemy {
-        transform: scale(0.82);
-        margin-top: 42px;
-    }
-
-    .energy-section {
-        padding-bottom: 8px;
-    }
-
-    .attack-button {
-        min-height: 72px;
-    }
-}
-
-@media (min-width: 700px) {
-    .game {
-        max-width: 620px;
-        margin: 0 auto;
-        border-left: 1px solid rgba(255, 255, 255, 0.05);
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
-    }
-}
+   
