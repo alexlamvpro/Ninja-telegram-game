@@ -251,15 +251,6 @@ function closeShop() {
 
 
 // ==========================================
-// BOTÓN TIENDA
-// ==========================================
-
-const shopButton = document.getElementById("shopButton");
-
-if (shopButton) {
-    shopButton.addEventListener("click", openShop);
-}
-// ==========================================
 // ENEMIGOS NORMALES
 // ==========================================
 
