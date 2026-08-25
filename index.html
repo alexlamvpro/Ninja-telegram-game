@@ -1,300 +1,264 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#090b12">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-  <title>Ninja</title>
+    <title>Ninja Battle</title>
 
-  <link rel="stylesheet" href="style.css">
+    <!-- Telegram Mini App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <main class="game">
+    <main class="game">
 
-    <!-- HEADER -->
-    <header class="top-bar">
+        <!-- PERFIL -->
+        <header class="top-bar">
 
-      <button class="profile-button" id="profileButton">
-        <div class="avatar">🥷</div>
+            <button id="profileButton" class="profile">
+                <div class="avatar">
+                    <span id="avatarLetter">N</span>
+                </div>
 
-        <div class="profile-info">
-          <span class="profile-name" id="playerName">Ninja</span>
-          <span class="profile-level">Nivel <strong id="playerLevel">1</strong></span>
+                <div class="profile-info">
+                    <strong id="playerName">Ninja</strong>
+                    <span id="playerLevel">Nivel 1</span>
+                </div>
+            </button>
+
+            <!-- MENÚ -->
+            <button id="menuButton" class="menu-button" aria-label="Abrir menú">
+                ☰
+            </button>
+
+        </header>
+
+
+        <!-- ZONA DEL ENEMIGO -->
+        <section class="battle-area">
+
+            <div class="boss-info">
+
+                <div class="enemy-name">
+                    <span id="enemyType">JEFE</span>
+                    <h1 id="enemyName">Rey de las Sombras</h1>
+                </div>
+
+                <div class="health-text">
+                    <span>❤️</span>
+                    <span id="enemyHealthText">10,000 / 10,000</span>
+                </div>
+
+                <div class="health-bar">
+                    <div id="enemyHealthBar" class="health-fill"></div>
+                </div>
+
+            </div>
+
+
+            <!-- ENEMIGO -->
+            <div id="enemy" class="enemy">
+
+                <div class="enemy-aura"></div>
+
+                <div class="enemy-character">
+
+                    <div class="enemy-head">
+                        <div class="horn horn-left"></div>
+                        <div class="horn horn-right"></div>
+
+                        <div class="enemy-face">
+                            <div class="eye eye-left"></div>
+                            <div class="eye eye-right"></div>
+                        </div>
+                    </div>
+
+                    <div class="enemy-body">
+
+                        <div class="armor armor-left"></div>
+                        <div class="armor armor-right"></div>
+
+                        <div class="chest-core"></div>
+
+                    </div>
+
+                    <div class="enemy-cloak"></div>
+
+                </div>
+
+                <div id="damageNumber" class="damage-number"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ENERGÍA -->
+        <section class="energy-section">
+
+            <div class="energy-header">
+                <span>⚡ ENERGÍA</span>
+                <strong id="energyText">100 / 100</strong>
+            </div>
+
+            <div class="energy-bar">
+                <div id="energyBar" class="energy-fill"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ATAQUES -->
+        <section class="attack-section">
+
+            <button id="comboButton" class="attack-button combo">
+
+                <span class="attack-icon">🔥</span>
+
+                <strong>COMBO</strong>
+
+                <small>
+                    3 GOLPES
+                    <br>
+                    -4 ⚡
+                </small>
+
+            </button>
+
+
+            <button id="attackButton" class="attack-button normal">
+
+                <span class="attack-icon">⚔️</span>
+
+                <strong>ATAQUE</strong>
+
+                <small>
+                    NORMAL
+                    <br>
+                    -2 ⚡
+                </small>
+
+            </button>
+
+
+            <button id="criticalButton" class="attack-button critical">
+
+                <span class="attack-icon">💥</span>
+
+                <strong>CRÍTICO</strong>
+
+                <small>
+                    DAÑO ALTO
+                    <br>
+                    -8 ⚡
+                </small>
+
+            </button>
+
+        </section>
+
+
+        <!-- MONEDAS / WALLET -->
+        <section class="bottom-bar">
+
+            <div class="coins">
+                <span>🪙</span>
+                <strong id="coinsText">1,250</strong>
+            </div>
+
+            <button id="walletButton" class="wallet-button">
+                💰 Wallet
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <!-- MENÚ LATERAL -->
+    <aside id="sideMenu" class="side-menu">
+
+        <div class="menu-header">
+
+            <h2>Ninja Battle</h2>
+
+            <button id="closeMenu" class="close-menu">
+                ×
+            </button>
+
         </div>
-      </button>
-
-      <button class="menu-button" id="menuButton" aria-label="Abrir menú">
-        ☰
-      </button>
-
-    </header>
 
 
-    <!-- MENÚ -->
-    <aside class="side-menu" id="sideMenu">
+        <div class="menu-player">
 
-      <div class="menu-header">
-        <span>MENÚ</span>
+            <div class="menu-avatar">
+                <span id="menuAvatarLetter">N</span>
+            </div>
 
-        <button id="closeMenu">×</button>
-      </div>
+            <div>
+                <strong id="menuPlayerName">Ninja</strong>
+                <span id="menuPlayerLevel">Nivel 1</span>
+            </div>
 
-      <nav>
+        </div>
 
-        <button class="menu-item">
-          <span>👤</span>
-          <span>Perfil</span>
-        </button>
 
-        <button class="menu-item">
-          <span>⚙️</span>
-          <span>Ajustes</span>
-        </button>
+        <nav class="menu-options">
 
-        <button class="menu-item">
-          <span>🎁</span>
-          <span>Recompensas</span>
-        </button>
+            <button>
+                👤
+                <span>Perfil</span>
+            </button>
 
-        <button class="menu-item">
-          <span>👥</span>
-          <span>Referidos</span>
-        </button>
+            <button>
+                ⚙️
+                <span>Ajustes</span>
+            </button>
 
-        <button class="menu-item">
-          <span>🤝</span>
-          <span>Socios</span>
-        </button>
+            <button>
+                🎁
+                <span>Recompensas</span>
+            </button>
 
-        <button class="menu-item">
-          <span>🎯</span>
-          <span>Misiones externas</span>
-        </button>
+            <button>
+                📺
+                <span>Ver anuncios</span>
+            </button>
 
-        <button class="menu-item">
-          <span>💰</span>
-          <span>Wallet</span>
-        </button>
+            <button>
+                👥
+                <span>Referidos</span>
+            </button>
 
-      </nav>
+            <button>
+                🤝
+                <span>Socios</span>
+            </button>
 
-      <div class="menu-event">
+            <button>
+                🎯
+                <span>Misiones externas</span>
+            </button>
 
-        <span class="event-label">PRÓXIMO EVENTO</span>
+            <button>
+                💰
+                <span>Wallet TON</span>
+            </button>
 
-        <strong>👹 JEFE SUPREMO</strong>
-
-        <span id="eventCountdown">Preparándose...</span>
-
-      </div>
+        </nav>
 
     </aside>
 
 
-    <!-- ÁREA PRINCIPAL -->
-    <section class="battle-area">
+    <div id="menuOverlay" class="menu-overlay"></div>
 
 
-      <!-- INFORMACIÓN DEL JEFE -->
-      <div class="boss-info">
-
-        <div class="boss-title-row">
-
-          <div>
-            <span class="boss-label">JEFE</span>
-            <h1 id="bossName">REY DE LAS SOMBRAS</h1>
-          </div>
-
-          <span class="boss-level">
-            NIVEL <strong id="bossLevel">5</strong>
-          </span>
-
-        </div>
-
-
-        <!-- VIDA -->
-        <div class="health-container">
-
-          <div class="health-text">
-            <span>❤️ VIDA</span>
-
-            <span>
-              <strong id="bossHealth">10000</strong>
-              /
-              <span id="bossMaxHealth">10000</span>
-            </span>
-          </div>
-
-          <div class="health-bar">
-            <div class="health-fill" id="bossHealthBar"></div>
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ENEMIGO -->
-      <div class="enemy-area">
-
-        <div class="enemy-aura"></div>
-
-        <div class="enemy" id="enemy">
-
-          <div class="enemy-eyes">
-            <span></span>
-            <span></span>
-          </div>
-
-          <div class="enemy-face">
-            👹
-          </div>
-
-        </div>
-
-        <div class="enemy-name">
-          REY DE LAS SOMBRAS
-        </div>
-
-        <div class="damage-container" id="damageContainer"></div>
-
-      </div>
-
-
-      <!-- ENERGÍA -->
-      <div class="energy-section">
-
-        <div class="energy-header">
-
-          <span>⚡ ENERGÍA</span>
-
-          <strong>
-            <span id="energy">100</span>/100
-          </strong>
-
-        </div>
-
-        <div class="energy-bar">
-          <div class="energy-fill" id="energyBar"></div>
-        </div>
-
-        <div class="energy-recovery">
-          Recuperación: <span id="recoveryTimer">00:00</span>
-        </div>
-
-      </div>
-
-
-      <!-- ATAQUES -->
-      <div class="attack-buttons">
-
-        <!-- COMBO -->
-        <button
-          class="attack-button combo"
-          id="comboButton"
-          data-cost="4"
-        >
-
-          <span class="attack-icon">💥</span>
-
-          <span class="attack-name">
-            COMBO
-          </span>
-
-          <span class="attack-description">
-            ×3 GOLPES
-          </span>
-
-          <span class="attack-cost">
-            ⚡ 4
-          </span>
-
-        </button>
-
-
-        <!-- ATAQUE -->
-        <button
-          class="attack-button normal"
-          id="attackButton"
-          data-cost="2"
-        >
-
-          <span class="attack-icon">⚔️</span>
-
-          <span class="attack-name">
-            ATAQUE
-          </span>
-
-          <span class="attack-description">
-            DAÑO NORMAL
-          </span>
-
-          <span class="attack-cost">
-            ⚡ 2
-          </span>
-
-        </button>
-
-
-        <!-- CRÍTICO -->
-        <button
-          class="attack-button critical"
-          id="criticalButton"
-          data-cost="8"
-        >
-
-          <span class="attack-icon">🔥</span>
-
-          <span class="attack-name">
-            CRÍTICO
-          </span>
-
-          <span class="attack-description">
-            DAÑO MASIVO
-          </span>
-
-          <span class="attack-cost">
-            ⚡ 8
-          </span>
-
-        </button>
-
-      </div>
-
-
-      <!-- MONEDAS / WALLET -->
-      <div class="bottom-bar">
-
-        <div class="coins">
-
-          <span class="coin-icon">🪙</span>
-
-          <div>
-            <span class="coins-label">MONEDAS</span>
-            <strong id="coins">1250</strong>
-          </div>
-
-        </div>
-
-        <button class="wallet-button">
-          💰 WALLET
-        </button>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- OVERLAY -->
-  <div class="overlay" id="overlay"></div>
-
-
-  <script src="script.js"></script>
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
 
 </body>
 </html>
