@@ -94,7 +94,7 @@ const normalEnemies = [
         type: "GUERRERO OSCURO",
         name: "Kurojin",
         health: 80,
-        maxHealth: 100,
+        maxHealth: 80,
         minDamage: 2,
         maxDamage: 4,
         reward: 130
@@ -104,7 +104,7 @@ const normalEnemies = [
         type: "DEMONIO",
         name: "Raizen",
         health: 90,
-        maxHealth: 120,
+        maxHealth: 90,
         minDamage: 2,
         maxDamage: 4,
         reward: 140
@@ -114,7 +114,7 @@ const normalEnemies = [
         type: "SHINIGAMI",
         name: "Kurohane",
         health: 100,
-        maxHealth: 150,
+        maxHealth: 100,
         minDamage: 2,
         maxDamage: 4,
         reward: 200
@@ -459,7 +459,7 @@ function haptic(type = "light") {
 function normalAttack() {
 
     const energyCost = 2;
-     );
+     
     if (
         player.energy <
         energyCost
@@ -616,7 +616,7 @@ function criticalAttack() {
     updateEnergy();
 
     const damage = 10;
-        );
+        
 
     enemy.health -=
         damage;
