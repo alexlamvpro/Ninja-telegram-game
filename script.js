@@ -744,7 +744,7 @@ function normalAttack() {
     player.energy -=
         energyCost;
 
-    const damage = 2;
+    const damage = equippedWeapon ? equippedWeapon.damage : 2;
 
     enemy.health -=
         damage;
