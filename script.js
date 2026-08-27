@@ -812,8 +812,7 @@ function comboAttack() {
 
         setTimeout(() => {
 
-            const comboDamage = [1, 2, 2];
-const damage = comboDamage[i];
+            const damage = equippedWeapon ? equippedWeapon.damage * 0.5 : 1;
                 
 
             enemy.health -=
@@ -882,7 +881,7 @@ function criticalAttack() {
 
     updateEnergy();
 
-    const damage = 10;
+    const damage = equippedWeapon ? equippedWeapon.damage * 3 : 10;
         
 
     enemy.health -=
