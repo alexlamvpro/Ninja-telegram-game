@@ -235,7 +235,7 @@ function upgradeWeapon(weaponId) {
     weapon.level += 1;
 
     // Aumentar el daño en 1 punto
-    weapon.damage += 1;
+    weapon.damage += 0.5;
 
     // Actualizar la tienda
     openWeaponShop();
