@@ -5,6 +5,9 @@
 
 const tg = window.Telegram?.WebApp;
 
+const API_URL =
+    "https://ninja-telegram-game.gustavocameda1.workers.dev";
+
 if (tg) {
     tg.ready();
     tg.expand();
@@ -105,6 +108,128 @@ const weapons = [
 
 ];
 
+// ==========================================
+// GUARDAR PARTIDA
+// ==========================================
+
+async function saveGame() {
+
+    if (!player.id) {
+        console.log("No hay ID de jugador.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/save`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    userId: player.id,
+                    coins: player.coins,
+                    weapons: weapons,
+                    weaponLevels: weapons.map(
+                        weapon => weapon.level
+                    )
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        console.log("Partida guardada:", data);
+
+    } catch (error) {
+
+        console.error(
+            "Error al guardar la partida:",
+            error
+        );
+    }
+}
+
+
+// ==========================================
+// CARGAR PARTIDA
+// ==========================================
+
+async function loadGame() {
+
+    if (!player.id) {
+        console.log("No hay ID de jugador.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/load?userId=${player.id}`
+        );
+
+        const result = await response.json();
+
+        // Si el jugador todavía no tiene partida
+        if (!result.data) {
+
+            console.log(
+                "Jugador nuevo. Se usarán los datos iniciales."
+            );
+
+            await saveGame();
+
+            return;
+        }
+
+        const data = result.data;
+
+        // Cargar monedas
+        if (data.monedas !== null) {
+
+            player.coins =
+                Number(data.monedas);
+        }
+
+        // Cargar armas
+        if (data.armas) {
+
+            const savedWeapons =
+                JSON.parse(data.armas);
+
+            savedWeapons.forEach(
+                (savedWeapon, index) => {
+
+                    if (!weapons[index]) {
+                        return;
+                    }
+
+                    weapons[index] = {
+                        ...weapons[index],
+                        ...savedWeapon
+                    };
+                }
+            );
+        }
+
+        updateCoins();
+
+        console.log(
+            "Partida cargada correctamente."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error al cargar la partida:",
+            error
+        );
+    }
+}
 
 // ==========================================
 // ARMA EQUIPADA
