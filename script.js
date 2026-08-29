@@ -614,7 +614,7 @@ const shopButton =
 // DATOS DE TELEGRAM
 // ==========================================
 
-function loadTelegramUser() {
+async function loadTelegramUser() {
 
     if (!tg) {
         return;
