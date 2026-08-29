@@ -362,6 +362,9 @@ function upgradeWeapon(weaponId) {
     // Aumentar el daño en 1 punto
     weapon.damage += 0.5;
 
+    // Guardar la partida
+    saveGame();
+    
     // Actualizar la tienda
     openWeaponShop();
     
