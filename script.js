@@ -6,7 +6,7 @@
 const tg = window.Telegram?.WebApp;
 
 const API_URL =
-    "https://ninja-telegram-game.gustavocameda1.workers.dev";
+    "https://f1989401-ninja-telegram-game.gustavocameda1.workers.dev/";
 
 if (tg) {
     tg.ready();
