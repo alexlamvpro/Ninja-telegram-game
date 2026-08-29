@@ -2,7 +2,6 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Permitir solicitudes del juego
     const headers = {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -10,15 +9,14 @@ export default {
       "Access-Control-Allow-Headers": "Content-Type"
     };
 
-    // Responder a solicitudes OPTIONS
     if (request.method === "OPTIONS") {
       return new Response(null, { headers });
     }
-    // Ruta raíz
+
     if (url.pathname === "/") {
       return new Response(JSON.stringify({ status: "OK", mensaje: "Servidor activo" }), { headers });
     }
-    
+
     // CARGAR PARTIDA
     if (url.pathname === "/load" && request.method === "GET") {
       const userId = url.searchParams.get("userId");
@@ -30,61 +28,77 @@ export default {
         );
       }
 
-      const result = await env.DB.prepare(`
-        SELECT * FROM ahorra
-        WHERE "ID de usuario" = ?
-      `).bind(userId).first();
+      try {
+        const result = await env.DB.prepare(`
+          SELECT * FROM ahorra
+          WHERE id_usuario = ?
+        `).bind(userId).first();
 
-      return new Response(
-        JSON.stringify({ data: result || null }),
-        { headers }
-      );
+        return new Response(
+          JSON.stringify({ data: result || null }),
+          { headers }
+        );
+      } catch (err) {
+        return new Response(
+          JSON.stringify({ error: err.message }),
+          { status: 500, headers }
+        );
+      }
     }
 
     // GUARDAR PARTIDA
     if (url.pathname === "/save" && request.method === "POST") {
-      const body = await request.json();
+      try {
+        const body = await request.json();
+        const { userId, coins, weapons, weaponLevels } = body;
 
-      const {
-        userId,
-        coins,
-        weapons,
-        weaponLevels
-      } = body;
+        if (!userId) {
+          return new Response(
+            JSON.stringify({ error: "Falta userId" }),
+            { status: 400, headers }
+          );
+        }
 
-      if (!userId) {
+        await env.DB.prepare(`
+          INSERT INTO ahorra (
+            id_usuario,
+            monedas,
+            armas,
+            niveles_de_armas,
+            actualizado_en
+          )
+          VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+
+          ON CONFLICT(id_usuario) DO UPDATE SET
+            monedas = excluded.monedas,
+            armas = excluded.armas,
+            niveles_de_armas = excluded.niveles_de_armas,
+            actualizado_en = CURRENT_TIMESTAMP
+        `).bind(
+          userId,
+          coins ?? 0,
+          JSON.stringify(weapons || []),
+          JSON.stringify(weaponLevels || {})
+        ).run();
+
         return new Response(
-          JSON.stringify({ error: "Falta userId" }),
-          { status: 400, headers }
+          JSON.stringify({ success: true }),
+          { headers }
+        );
+      } catch (err) {
+        return new Response(
+          JSON.stringify({ error: err.message }),
+          { status: 500, headers }
         );
       }
+    }
 
-      await env.DB.prepare(`
-        INSERT INTO ahorra (
-          "ID de usuario",
-          monedas,
-          armas,
-          niveles_de_armas,
-          actualizado_en
-        )
-        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
-
-        ON CONFLICT("ID de usuario") DO UPDATE SET
-          monedas = excluded.monedas,
-          armas = excluded.armas,
-          niveles_de_armas = excluded.niveles_de_armas,
-          actualizado_en = CURRENT_TIMESTAMP
-      `).bind(
-        userId,
-        coins,
-        JSON.stringify(weapons),
-        JSON.stringify(weaponLevels)
-      ).run();
-
-      return new Response(
-        JSON.stringify({ success: true }),
-        { headers }
-      );
+    // PERMITIR SERVIR ARCHIVOS ESTÁTICOS DE CLOUDFLARE ASSETS
+    if (env.ASSETS) {
+      const assetResponse = await env.ASSETS.fetch(request);
+      if (assetResponse.status !== 404) {
+        return assetResponse;
+      }
     }
 
     return new Response(
