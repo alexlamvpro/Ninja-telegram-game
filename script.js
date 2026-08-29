@@ -1069,7 +1069,7 @@ function checkEnemyDefeat() {
             reward;
 
         updateCoins();
-
+        saveGame();
         showMessage(
             `💰 +${reward} monedas`
         );
