@@ -9,15 +9,12 @@ export default {
       "Access-Control-Allow-Headers": "Content-Type"
     };
 
+    // 1. Manejo de CORS
     if (request.method === "OPTIONS") {
       return new Response(null, { headers });
     }
 
-    if (url.pathname === "/") {
-      return new Response(JSON.stringify({ status: "OK", mensaje: "Servidor activo" }), { headers });
-    }
-
-    // CARGAR PARTIDA
+    // 2. CARGAR PARTIDA
     if (url.pathname === "/load" && request.method === "GET") {
       const userId = url.searchParams.get("userId");
 
@@ -46,7 +43,7 @@ export default {
       }
     }
 
-    // GUARDAR PARTIDA
+    // 3. GUARDAR PARTIDA
     if (url.pathname === "/save" && request.method === "POST") {
       try {
         const body = await request.json();
@@ -93,7 +90,7 @@ export default {
       }
     }
 
-    // PERMITIR SERVIR ARCHIVOS ESTÁTICOS DE CLOUDFLARE ASSETS
+    // 4. SERVIR JUEGO (index.html, style.css, script.js)
     if (env.ASSETS) {
       const assetResponse = await env.ASSETS.fetch(request);
       if (assetResponse.status !== 404) {
