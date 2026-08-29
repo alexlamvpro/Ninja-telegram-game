@@ -115,6 +115,7 @@ const weapons = [
 async function saveGame() {
 
     if (!player.id) {
+        alert("ERROR: No se encontró el ID de Telegram.");
         console.log("No hay ID de jugador.");
         return;
     }
@@ -143,13 +144,28 @@ async function saveGame() {
 
         const data = await response.json();
 
-        console.log("Partida guardada:", data);
+        console.log("Respuesta del guardado:", data);
+
+        if (!response.ok || !data.success) {
+            alert(
+                "ERROR AL GUARDAR:\n" +
+                (data.error || JSON.stringify(data))
+            );
+            return;
+        }
+
+        console.log("Partida guardada correctamente:", data);
 
     } catch (error) {
 
         console.error(
             "Error al guardar la partida:",
             error
+        );
+
+        alert(
+            "ERROR DE CONEXIÓN:\n" +
+            error.message
         );
     }
 }
