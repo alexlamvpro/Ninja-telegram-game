@@ -646,6 +646,8 @@ function loadTelegramUser() {
     }
 
     updatePlayerInterface();
+
+await loadGame();
 }
 
 
