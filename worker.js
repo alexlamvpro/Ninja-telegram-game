@@ -14,7 +14,11 @@ export default {
     if (request.method === "OPTIONS") {
       return new Response(null, { headers });
     }
-
+    // Ruta raíz
+    if (url.pathname === "/") {
+      return new Response(JSON.stringify({ status: "OK", mensaje: "Servidor activo" }), { headers });
+    }
+    
     // CARGAR PARTIDA
     if (url.pathname === "/load" && request.method === "GET") {
       const userId = url.searchParams.get("userId");
