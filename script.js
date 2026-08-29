@@ -402,7 +402,8 @@ function buyWeapon(weaponId) {
 
     equippedWeapon = weapon;
 
-
+    saveGame();
+    
     openWeaponShop();
 
 }
