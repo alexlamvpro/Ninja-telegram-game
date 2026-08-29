@@ -1101,7 +1101,6 @@ button {
     .energy-section {
         padding-bottom: 7px;
     }
-}
 
 @media (min-width: 700px) {
 
@@ -1117,7 +1116,7 @@ button {
             1px solid
             rgba(255, 255, 255, 0.05);
     }
-        }
+}
 
 /* ==========================================
    TIENDA DE ARMAS
@@ -1186,3 +1185,4 @@ button {
 .weapon-card button:disabled {
     opacity: 0.6;
 }
+    
