@@ -90,11 +90,10 @@ export default {
       }
     }
 
-    // 4. SERVIR ARCHIVOS WEB (index.html, style.css, script.js)
+    // 4. SERVIR ARCHIVOS ESTÁTICOS (index.html, style.css, script.js)
     if (env.ASSETS) {
       let targetRequest = request;
       
-      // Si entran a la raíz '/', cargar explícitamente index.html
       if (url.pathname === "/") {
         targetRequest = new Request(new URL("/index.html", request.url), request);
       }
@@ -111,3 +110,4 @@ export default {
     );
   }
 };
+          
