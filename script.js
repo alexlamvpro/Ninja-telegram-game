@@ -157,6 +157,7 @@ async function saveGame() {
                 weapons: weapons,
                 weaponLevels: weapons.map(w => w.level),
                 enemyIndex: enemyIndex,
+                enemyHealth: enemy.health, // <--- Vida actual enviada a la BD
                 energy: player.energy
             })
         });
@@ -172,6 +173,7 @@ async function saveGame() {
         console.error("Error de conexión al guardar:", error);
     }
 }
+
 
 async function loadGame() {
     if (!player.id) {
@@ -195,10 +197,16 @@ async function loadGame() {
         if (data.energia !== null && data.energia !== undefined) player.energy = Number(data.energia);
 
         if (data.enemigo !== null && data.enemigo !== undefined) {
-            enemyIndex = Number(data.enemigo);
-            if (enemyIndex >= normalEnemies.length) enemyIndex = 0;
-            enemy = { ...normalEnemies[enemyIndex] };
-        }
+    enemyIndex = Number(data.enemigo);
+    if (enemyIndex >= normalEnemies.length) enemyIndex = 0;
+    enemy = { ...normalEnemies[enemyIndex] };
+
+    // Restaurar la vida guardada del enemigo si existe en la base de datos
+    if (data.enemigo_vida !== null && data.enemigo_vida !== undefined) {
+        enemy.health = Math.min(Number(data.enemigo_vida), enemy.maxHealth);
+    }
+}
+
 
         if (data.armas) {
             try {
@@ -434,6 +442,15 @@ function haptic(type = "light") {
     }
 }
 
+
+let saveTimeout;
+function debouncedSave() {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+        saveGame();
+    }, 1000);
+}
+
 function normalAttack() {
     const energyCost = 2;
     if (player.energy < energyCost) {
@@ -454,6 +471,7 @@ function normalAttack() {
     haptic("medium");
 
     checkEnemyDefeat();
+    debouncedSave()
 }
 
 function comboAttack() {
@@ -479,6 +497,7 @@ function comboAttack() {
             haptic("light");
 
             if (i === hits - 1) checkEnemyDefeat();
+            debouncedSave()
         }, i * 230);
     }
 }
@@ -503,6 +522,7 @@ function criticalAttack() {
     haptic("heavy");
 
     checkEnemyDefeat();
+    debouncedSave()
 }
 
 // ==========================================
