@@ -141,12 +141,26 @@ async function saveGame() {
         );
 
         const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            alert(
+                "ERROR AL GUARDAR:\n" +
+                (data.error || JSON.stringify(data))
+            );
+            return;
+        }
+
         console.log("Partida guardada correctamente:", data);
 
     } catch (error) {
         console.error("Error al guardar la partida:", error);
+        alert(
+            "ERROR DE CONEXIÓN:\n" +
+            error.message
+        );
     }
 }
+
 
 // ==========================================
 // CARGAR PARTIDA
