@@ -87,7 +87,7 @@ export default {
   JSON.stringify(weapons || []),
   JSON.stringify(weaponLevels || {}),
   enemyIndex ?? 0,
-  enemyHealth ?? 100,
+  enemyHealth,
   energy ?? 100
 ).run();
         return new Response(
