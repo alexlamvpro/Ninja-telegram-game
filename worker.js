@@ -60,36 +60,33 @@ export default {
         const userId = String(rawUserId);
 
         await env.DB.prepare(`
-  INSERT INTO ahorra (
-    id_usuario,
-    monedas,
-    armas,
-    niveles_de_armas,
-    enemigo,
-    enemigo_vida,
-    energia,
-    actualizado_en
-  )
-  VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+          INSERT INTO ahorra (
+            id_usuario,
+            monedas,
+            armas,
+            niveles_de_armas,
+            enemigo,
+            energia,
+            actualizado_en
+          )
+          VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
 
-  ON CONFLICT(id_usuario) DO UPDATE SET
-    monedas = excluded.monedas,
-    armas = excluded.armas,
-    niveles_de_armas = excluded.niveles_de_armas,
-    enemigo = excluded.enemigo,
-    enemigo_vida = excluded.enemigo_vida,
-    energia = excluded.energia,
-    actualizado_en = CURRENT_TIMESTAMP
-`)
-.bind(
-  userId,
-  coins ?? 0,
-  JSON.stringify(weapons || []),
-  JSON.stringify(weaponLevels || {}),
-  enemyIndex ?? 0,
-  enemyHealth,
-  energy ?? 100
-).run();
+          ON CONFLICT(id_usuario) DO UPDATE SET
+            monedas = excluded.monedas,
+            armas = excluded.armas,
+            niveles_de_armas = excluded.niveles_de_armas,
+            enemigo = excluded.enemigo,
+            energia = excluded.energia,
+            actualizado_en = CURRENT_TIMESTAMP
+        `).bind(
+          userId,
+          coins ?? 0,
+          JSON.stringify(weapons || []),
+          JSON.stringify(weaponLevels || {}),
+          enemyIndex ?? 0,
+          energy ?? 100
+        ).run();
+
         return new Response(
           JSON.stringify({ success: true }),
           { headers }
