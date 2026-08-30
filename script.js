@@ -1459,8 +1459,13 @@ setInterval(() => {
 
 async function initGame() {
 
+    // 1. Cargar usuario de Telegram
     await loadTelegramUser();
 
+    // 2. Cargar partida desde Cloudflare D1
+    await loadGame();
+
+    // 3. Renderizar interfaz con los datos cargados
     updatePlayerInterface();
     updateEnergy();
     updateCoins();
