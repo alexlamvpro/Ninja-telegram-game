@@ -9,21 +9,22 @@ export default {
       "Access-Control-Allow-Headers": "Content-Type"
     };
 
-    // 1. Manejo de peticiones OPTIONS (CORS)
     if (request.method === "OPTIONS") {
       return new Response(null, { headers });
     }
 
-    // 2. CARGAR PARTIDA (/load)
+    // 1. CARGAR PARTIDA (/load)
     if (url.pathname === "/load" && request.method === "GET") {
-      const userId = url.searchParams.get("userId");
+      const rawUserId = url.searchParams.get("userId");
 
-      if (!userId) {
+      if (!rawUserId) {
         return new Response(
           JSON.stringify({ error: "Falta userId" }),
           { status: 400, headers }
         );
       }
+
+      const userId = String(rawUserId);
 
       try {
         const result = await env.DB.prepare(`
@@ -43,18 +44,20 @@ export default {
       }
     }
 
-    // 3. GUARDAR PARTIDA (/save)
+    // 2. GUARDAR PARTIDA (/save)
     if (url.pathname === "/save" && request.method === "POST") {
       try {
         const body = await request.json();
-        const { userId, coins, weapons, weaponLevels } = body;
+        const { userId: rawUserId, coins, weapons, weaponLevels } = body;
 
-        if (!userId) {
+        if (!rawUserId) {
           return new Response(
             JSON.stringify({ error: "Falta userId" }),
             { status: 400, headers }
           );
         }
+
+        const userId = String(rawUserId);
 
         await env.DB.prepare(`
           INSERT INTO ahorra (
@@ -90,7 +93,7 @@ export default {
       }
     }
 
-    // 4. SERVIR ARCHIVOS ESTÁTICOS (index.html, style.css, script.js)
+    // 3. ARCHIVOS ESTÁTICOS (index.html, style.css, script.js)
     if (env.ASSETS) {
       let targetRequest = request;
       
@@ -110,4 +113,3 @@ export default {
     );
   }
 };
-          
