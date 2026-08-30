@@ -661,3 +661,12 @@ async function initGame() {
 
 // Escuchador para arrancar cuando el DOM esté listo
 document.addEventListener("DOMContentLoaded", initGame);
+
+// Guardar cuando el usuario cierra o minimiza la app en Telegram
+window.addEventListener("beforeunload", saveGame);
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+        saveGame();
+    }
+});
+
