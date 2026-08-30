@@ -48,7 +48,7 @@ export default {
     if (url.pathname === "/save" && request.method === "POST") {
       try {
         const body = await request.json();
-        const { userId: rawUserId, coins, weapons, weaponLevels, enemyIndex } = body;
+        const { userId: rawUserId, coins, weapons, weaponLevels, enemyIndex, energy } = body;
 
         if (!rawUserId) {
           return new Response(
@@ -66,22 +66,25 @@ export default {
             armas,
             niveles_de_armas,
             enemigo,
+            energia,
             actualizado_en
           )
-          VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+          VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
 
           ON CONFLICT(id_usuario) DO UPDATE SET
             monedas = excluded.monedas,
             armas = excluded.armas,
             niveles_de_armas = excluded.niveles_de_armas,
             enemigo = excluded.enemigo,
+            energia = excluded.energia,
             actualizado_en = CURRENT_TIMESTAMP
         `).bind(
           userId,
           coins ?? 0,
           JSON.stringify(weapons || []),
           JSON.stringify(weaponLevels || {}),
-          enemyIndex ?? 0
+          enemyIndex ?? 0,
+          energy ?? 100
         ).run();
 
         return new Response(
@@ -116,4 +119,3 @@ export default {
     );
   }
 };
-      
