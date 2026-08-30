@@ -190,62 +190,43 @@ async function loadGame() {
 
         const result = await response.json();
 
-        // Si el jugador todavía no tiene partida
         if (!result.data) {
-
             console.log(
                 "Jugador nuevo. Se usarán los datos iniciales."
             );
-
             await saveGame();
-
             return;
         }
 
         const data = result.data;
 
         // Cargar monedas
-        if (data.monedas !== null) {
-
-            player.coins =
-                Number(data.monedas);
+        if (data.monedas !== null && data.monedas !== undefined) {
+            player.coins = Number(data.monedas);
         }
 
         // Cargar armas
         if (data.armas) {
-
-            const savedWeapons =
-                JSON.parse(data.armas);
-
-            savedWeapons.forEach(
-                (savedWeapon, index) => {
-
-                    if (!weapons[index]) {
-                        return;
+            try {
+                const savedWeapons = JSON.parse(data.armas);
+                savedWeapons.forEach((savedWeapon, index) => {
+                    if (weapons[index]) {
+                        Object.assign(weapons[index], savedWeapon);
                     }
-
-                    weapons[index] = {
-                        ...weapons[index],
-                        ...savedWeapon
-                    };
-                }
-            );
+                });
+            } catch (e) {
+                console.error("Error al leer armas guardadas:", e);
+            }
         }
 
         updateCoins();
-
-        console.log(
-            "Partida cargada correctamente."
-        );
+        console.log("Partida cargada correctamente.");
 
     } catch (error) {
-
-        console.error(
-            "Error al cargar la partida:",
-            error
-        );
+        console.error("Error al cargar la partida:", error);
     }
 }
+
 
 // ==========================================
 // ARMA EQUIPADA
