@@ -137,7 +137,8 @@ async function saveGame() {
                     weapons: weapons,
                     weaponLevels: weapons.map(
                         weapon => weapon.level
-                    )
+                    ),
+                    enemyIndex: enemyIndex
                 })
             }
         );
@@ -169,7 +170,6 @@ async function saveGame() {
         );
     }
 }
-
 
 // ==========================================
 // CARGAR PARTIDA
@@ -219,15 +219,25 @@ async function loadGame() {
             }
         }
 
+        // Cargar enemigo actual
+        if (data.enemigo !== null && data.enemigo !== undefined) {
+            enemyIndex = Number(data.enemigo);
+            if (enemyIndex >= normalEnemies.length) {
+                enemyIndex = 0;
+            }
+            enemy = { ...normalEnemies[enemyIndex] };
+            updateEnemyInterface();
+        }
+
         updateCoins();
         console.log("Partida cargada correctamente.");
 
     } catch (error) {
         console.error("Error al cargar la partida:", error);
     }
-}
-
-
+   }
+            
+        
 // ==========================================
 // ARMA EQUIPADA
 // ==========================================
