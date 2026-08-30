@@ -48,7 +48,7 @@ export default {
     if (url.pathname === "/save" && request.method === "POST") {
       try {
         const body = await request.json();
-        const { userId: rawUserId, coins, weapons, weaponLevels } = body;
+        const { userId: rawUserId, coins, weapons, weaponLevels, enemyIndex } = body;
 
         if (!rawUserId) {
           return new Response(
@@ -65,20 +65,23 @@ export default {
             monedas,
             armas,
             niveles_de_armas,
+            enemigo,
             actualizado_en
           )
-          VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+          VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
 
           ON CONFLICT(id_usuario) DO UPDATE SET
             monedas = excluded.monedas,
             armas = excluded.armas,
             niveles_de_armas = excluded.niveles_de_armas,
+            enemigo = excluded.enemigo,
             actualizado_en = CURRENT_TIMESTAMP
         `).bind(
           userId,
           coins ?? 0,
           JSON.stringify(weapons || []),
-          JSON.stringify(weaponLevels || {})
+          JSON.stringify(weaponLevels || {}),
+          enemyIndex ?? 0
         ).run();
 
         return new Response(
@@ -93,7 +96,7 @@ export default {
       }
     }
 
-    // 3. ARCHIVOS ESTÁTICOS (index.html, style.css, script.js)
+    // 3. ARCHIVOS ESTÁTICOS
     if (env.ASSETS) {
       let targetRequest = request;
       
@@ -113,3 +116,4 @@ export default {
     );
   }
 };
+      
