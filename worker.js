@@ -9,12 +9,12 @@ export default {
       "Access-Control-Allow-Headers": "Content-Type"
     };
 
-    // 1. Manejo de CORS
+    // 1. Manejo de peticiones OPTIONS (CORS)
     if (request.method === "OPTIONS") {
       return new Response(null, { headers });
     }
 
-    // 2. CARGAR PARTIDA
+    // 2. CARGAR PARTIDA (/load)
     if (url.pathname === "/load" && request.method === "GET") {
       const userId = url.searchParams.get("userId");
 
@@ -43,7 +43,7 @@ export default {
       }
     }
 
-    // 3. GUARDAR PARTIDA
+    // 3. GUARDAR PARTIDA (/save)
     if (url.pathname === "/save" && request.method === "POST") {
       try {
         const body = await request.json();
@@ -90,9 +90,16 @@ export default {
       }
     }
 
-    // 4. SERVIR JUEGO (index.html, style.css, script.js)
+    // 4. SERVIR ARCHIVOS WEB (index.html, style.css, script.js)
     if (env.ASSETS) {
-      const assetResponse = await env.ASSETS.fetch(request);
+      let targetRequest = request;
+      
+      // Si entran a la raíz '/', cargar explícitamente index.html
+      if (url.pathname === "/") {
+        targetRequest = new Request(new URL("/index.html", request.url), request);
+      }
+
+      const assetResponse = await env.ASSETS.fetch(targetRequest);
       if (assetResponse.status !== 404) {
         return assetResponse;
       }
