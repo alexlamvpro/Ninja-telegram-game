@@ -115,22 +115,18 @@ const weapons = [
 async function saveGame() {
 
     if (!player.id) {
-        alert("ERROR: No se encontró el ID de Telegram.");
         console.log("No hay ID de jugador.");
         return;
     }
 
     try {
-
         const response = await fetch(
             `${API_URL}/save`,
             {
                 method: "POST",
-
                 headers: {
                     "Content-Type": "application/json"
                 },
-
                 body: JSON.stringify({
                     userId: player.id,
                     coins: player.coins,
@@ -138,36 +134,17 @@ async function saveGame() {
                     weaponLevels: weapons.map(
                         weapon => weapon.level
                     ),
-                    enemyIndex: enemyIndex
+                    enemyIndex: enemyIndex,
+                    energy: player.energy
                 })
             }
         );
 
         const data = await response.json();
-
-        console.log("Respuesta del guardado:", data);
-
-        if (!response.ok || !data.success) {
-            alert(
-                "ERROR AL GUARDAR:\n" +
-                (data.error || JSON.stringify(data))
-            );
-            return;
-        }
-
         console.log("Partida guardada correctamente:", data);
 
     } catch (error) {
-
-        console.error(
-            "Error al guardar la partida:",
-            error
-        );
-
-        alert(
-            "ERROR DE CONEXIÓN:\n" +
-            error.message
-        );
+        console.error("Error al guardar la partida:", error);
     }
 }
 
@@ -183,7 +160,6 @@ async function loadGame() {
     }
 
     try {
-
         const response = await fetch(
             `${API_URL}/load?userId=${player.id}`
         );
@@ -191,9 +167,7 @@ async function loadGame() {
         const result = await response.json();
 
         if (!result.data) {
-            console.log(
-                "Jugador nuevo. Se usarán los datos iniciales."
-            );
+            console.log("Jugador nuevo. Se usarán los datos iniciales.");
             await saveGame();
             return;
         }
@@ -203,6 +177,20 @@ async function loadGame() {
         // Cargar monedas
         if (data.monedas !== null && data.monedas !== undefined) {
             player.coins = Number(data.monedas);
+        }
+
+        // Cargar energía
+        if (data.energia !== null && data.energia !== undefined) {
+            player.energy = Number(data.energia);
+        }
+
+        // Cargar enemigo actual
+        if (data.enemigo !== null && data.enemigo !== undefined) {
+            enemyIndex = Number(data.enemigo);
+            if (enemyIndex >= normalEnemies.length) {
+                enemyIndex = 0;
+            }
+            enemy = { ...normalEnemies[enemyIndex] };
         }
 
         // Cargar armas
@@ -219,25 +207,18 @@ async function loadGame() {
             }
         }
 
-        // Cargar enemigo actual
-        if (data.enemigo !== null && data.enemigo !== undefined) {
-            enemyIndex = Number(data.enemigo);
-            if (enemyIndex >= normalEnemies.length) {
-                enemyIndex = 0;
-            }
-            enemy = { ...normalEnemies[enemyIndex] };
-            updateEnemyInterface();
-        }
-
         updateCoins();
+        updateEnergy();
+        updateEnemyInterface();
+
         console.log("Partida cargada correctamente.");
 
     } catch (error) {
         console.error("Error al cargar la partida:", error);
     }
-   }
+        }
+
             
-        
 // ==========================================
 // ARMA EQUIPADA
 // ==========================================
@@ -1058,10 +1039,7 @@ function criticalAttack() {
 
 function checkEnemyDefeat() {
 
-    if (
-        enemy.health > 0
-    ) {
-
+    if (enemy.health > 0) {
         return;
     }
 
@@ -1069,27 +1047,18 @@ function checkEnemyDefeat() {
 
     setTimeout(() => {
 
-        const reward =
-            enemy.reward;
-
-        player.coins +=
-            reward;
+        const reward = enemy.reward;
+        player.coins += reward;
 
         updateCoins();
-        saveGame();
-        showMessage(
-            `💰 +${reward} monedas`
-        );
+        showMessage(`💰 +${reward} monedas`);
 
         setTimeout(() => {
-
             nextEnemy();
-
         }, 900);
 
     }, 450);
 }
-
 
 // ==========================================
 // SIGUIENTE ENEMIGO
@@ -1099,11 +1068,7 @@ function nextEnemy() {
 
     enemyIndex++;
 
-    if (
-        enemyIndex >=
-        normalEnemies.length
-    ) {
-
+    if (enemyIndex >= normalEnemies.length) {
         enemyIndex = 0;
     }
 
@@ -1112,12 +1077,12 @@ function nextEnemy() {
     };
 
     updateEnemyInterface();
-
     enableAttacks();
 
-    showMessage(
-        `${enemy.type}: ${enemy.name}`
-    );
+    // Se guarda la partida al pasar al nuevo enemigo
+    saveGame();
+
+    showMessage(`${enemy.type}: ${enemy.name}`);
 }
 
 
@@ -1461,58 +1426,32 @@ shopButton.addEventListener(
 
 setInterval(() => {
 
-    if (
-        player.energy <
-        player.maxEnergy
-    ) {
+    if (player.energy < player.maxEnergy) {
 
         player.energy++;
 
         updateEnergy();
+        
+        // Guarda automáticamente la nueva energía acumulada
+        saveGame();
     }
 
-}, 3000);
+}, 60000);
 
 
 // ==========================================
 // INICIALIZACIÓN
 // ==========================================
 
-function initGame() {
+async function initGame() {
 
-    loadTelegramUser();
+    await loadTelegramUser();
 
     updatePlayerInterface();
-
     updateEnergy();
-
     updateCoins();
-
     updateEnemyInterface();
-
     enableAttacks();
 
-    console.log(
-        "Ninja Battle iniciado."
-    );
-}
-
-
-// ==========================================
-// INICIAR
-// ==========================================
-
-if (
-    document.readyState ===
-    "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        initGame
-    );
-
-} else {
-
-    initGame();
+    console.log("Ninja Battle iniciado.");
 }
