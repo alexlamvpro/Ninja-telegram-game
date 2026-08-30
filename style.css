@@ -1186,3 +1186,72 @@ button {
     opacity: 0.6;
 }
     
+
+/* ==========================================
+   TIENDA DE ARMAS
+   ========================================== */
+
+.shop-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #090b12;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.shop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.shop-header h2 {
+    margin: 0;
+}
+
+.shop-header button {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid #555;
+    background: #171b25;
+    color: white;
+}
+
+.shop-coins {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.weapon-card {
+    padding: 18px;
+    margin-bottom: 14px;
+    border-radius: 16px;
+    background: #151a24;
+    border: 1px solid #303746;
+}
+
+.weapon-card h3 {
+    margin-top: 0;
+}
+
+.weapon-card p {
+    margin: 6px 0;
+}
+
+.weapon-card button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: 0;
+    border-radius: 10px;
+    background: #2388e8;
+    color: white;
+    font-weight: bold;
+}
+
+.weapon-card button:disabled {
+    opacity: 0.6;
+}
+    
