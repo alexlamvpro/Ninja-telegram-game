@@ -1,401 +1,1215 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Anime Mining — Demon Slayer Edition</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+<style>
+:root{
+  --bg-main:#1a0f0f;
+  --bg-card:rgba(28,15,15,.88);
+  --bg-card-2:rgba(40,18,18,.95);
+  --accent-red:#c41e3a;
+  --accent-gold:#ffb703;
+  --accent-purple:#7b2cbf;
+  --accent-green:#10b981;
+  --text:#f8f8f8;
+  --dim:#a8a8a8;
+  --radius-xl:22px;
+  --radius-lg:16px;
+  --radius-md:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:system-ui,-apple-system,sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  background:linear-gradient(180deg,rgba(26,15,15,.82) 0%,rgba(10,5,18,.9) 100%),
+    url("https://i.postimg.cc/0Q6j4B6x/1788760988257.jpg") center/cover no-repeat fixed;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;
+  background:radial-gradient(circle at 20% 15%,rgba(196,30,58,.18),transparent 45%),
+              radial-gradient(circle at 80% 85%,rgba(123,44,191,.12),transparent 50%);
+  pointer-events:none;z-index:0;
+}
+.app{position:relative;z-index:1;width:100%;max-width:430px;margin:0 auto;padding:10px 14px 20px;display:flex;flex-direction:column;min-height:100vh}
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    >
+/* ===== HEADER (solo balance) ===== */
+.header-actions{
+  display:flex;justify-content:center;align-items:center;
+  margin-bottom:10px;
+}
+.menu-btn,.settings-btn{
+  width:42px;height:42px;border-radius:14px;border:none;
+  background:var(--bg-card-2);color:#fff;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);cursor:pointer;
+  box-shadow:0 2px 12px rgba(0,0,0,.4);
+  transition:transform .2s ease, box-shadow .25s ease, background .25s ease;
+  position:relative;
+  overflow:hidden;
+}
+.menu-btn:active,.settings-btn:active{transform:scale(.88)}
+.menu-btn:hover,.settings-btn:hover{
+  background:rgba(196,30,58,.35);
+  box-shadow:0 0 16px rgba(196,30,58,.45);
+}
+.menu-btn::after,.settings-btn::after{
+  content:"";position:absolute;inset:0;border-radius:14px;
+  background:linear-gradient(135deg,rgba(255,183,3,.15),transparent 60%);
+  opacity:0;transition:opacity .3s;
+}
+.menu-btn:hover::after,.settings-btn:hover::after{opacity:1}
 
-    <title>Ninja Battle</title>
+/* Contenedor de botones a la derecha del Recolectar */
+.side-btns{
+  position:absolute;
+  right:6px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  z-index:5;
+  animation:fadeSlideIn .6s ease-out .2s both;
+}
+@keyframes fadeSlideIn{
+  from{opacity:0;transform:translateY(-50%) translateX(20px)}
+  to{opacity:1;transform:translateY(-50%) translateX(0)}
+}
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+/* ===== BALANCE REDISEÑADO ===== */
+.balance-card{
+  background:linear-gradient(145deg,rgba(40,15,15,.9),rgba(25,10,20,.85));
+  border-radius:24px;padding:18px 16px 16px;
+  text-align:center;margin-bottom:12px;
+  border:1px solid rgba(196,30,58,.25);
+  box-shadow:0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);
+  position:relative;overflow:hidden;flex:1;
+}
+.balance-card::before{
+  content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(circle,rgba(255,80,0,.08),transparent 60%);
+  animation:glowRotate 12s linear infinite;pointer-events:none;
+}
+@keyframes glowRotate{to{transform:rotate(360deg)}}
+.balance-label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:6px;position:relative}
+.balance-amount{
+  font-size:32px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;
+  position:relative;text-shadow:0 2px 12px rgba(196,30,58,.5);
+  animation:balanceGlow 4s ease-in-out infinite;
+}
+@keyframes balanceGlow{
+  0%,100%{text-shadow:0 2px 12px rgba(196,30,58,.5)}
+  50%{text-shadow:0 2px 18px rgba(255,183,3,.55),0 0 28px rgba(196,30,58,.4)}
+}
+.anim-icon{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#ff3d00,#c41e3a 40%,#ffb703);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:900;color:#fff;
+  box-shadow:0 0 0 2px rgba(255,60,0,.3),0 0 14px rgba(255,80,0,.45);
+  position:relative;
+}
+.anim-icon::after{
+  content:"";position:absolute;inset:-4px;border-radius:50%;
+  border:2px solid transparent;border-top-color:#ffb703;
+  animation:spin 3s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.balance-rates{display:flex;justify-content:center;gap:10px;margin-top:10px;position:relative;flex-wrap:wrap}
+.rate-pill{
+  background:rgba(0,0,0,.35);padding:4px 10px;border-radius:20px;
+  font-size:11px;color:var(--dim);
+}
+.rate-pill span{color:var(--accent-gold);font-weight:700}
 
-    <link rel="stylesheet" href="style.css?v=2">
+/* ===== ENERGÍA DELGADA ===== */
+.energy-row{
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg-card);border-radius:14px;
+  padding:10px 14px;margin-bottom:16px;
+  backdrop-filter:blur(8px);
+}
+.energy-label{font-size:12px;font-weight:600;white-space:nowrap;min-width:70px}
+.energy-track{
+  flex:1;height:6px;background:rgba(255,255,255,.08);
+  border-radius:10px;overflow:hidden;position:relative;
+}
+.energy-fill{
+  height:100%;border-radius:10px;
+  background:linear-gradient(90deg,#10b981,#4ade80,#a3e635);
+  box-shadow:0 0 10px rgba(16,185,129,.5);
+  transition:width .35s ease;
+  animation:energyPulse 2.2s ease-in-out infinite;
+}
+@keyframes energyPulse{
+  0%,100%{box-shadow:0 0 8px rgba(16,185,129,.45)}
+  50%{box-shadow:0 0 16px rgba(74,222,128,.7)}
+}
+.energy-text{font-size:11px;color:var(--dim);min-width:55px;text-align:right}
+
+/* ===== COLLECT ===== */
+.collect-wrap{display:flex;justify-content:center;margin:8px 0 24px;position:relative}
+.collect-btn{
+  width:200px;height:200px;border-radius:50%;border:none;
+  background:transparent;padding:0;cursor:pointer;
+  box-shadow:0 0 0 8px rgba(196,30,58,.18),0 0 50px rgba(255,80,0,.4);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  animation:btnPulse 3s infinite ease-in-out;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.collect-btn:active{transform:scale(.90)}
+.collect-btn img{width:100%;height:100%;object-fit:cover;border-radius:50%;pointer-events:none}
+.collect-label{
+  position:absolute;bottom:16px;left:0;right:0;text-align:center;
+  font-size:14px;font-weight:800;color:#fff;
+  text-shadow:0 2px 8px #000,0 0 10px rgba(196,30,58,.9);
+  background:linear-gradient(transparent,rgba(0,0,0,.55));
+  padding:6px 0 10px;border-radius:0 0 50% 50%;pointer-events:none;
+  animation:labelGlow 2.5s ease-in-out infinite;
+}
+@keyframes btnPulse{
+  0%,100%{box-shadow:0 0 0 8px rgba(196,30,58,.18),0 0 45px rgba(255,80,0,.35)}
+  50%{box-shadow:0 0 0 14px rgba(255,80,0,.28),0 0 75px rgba(255,60,0,.55)}
+}
+@keyframes labelGlow{
+  0%,100%{text-shadow:0 2px 8px #000,0 0 10px rgba(196,30,58,.9)}
+  50%{text-shadow:0 2px 8px #000,0 0 18px rgba(255,183,3,.95),0 0 30px rgba(196,30,58,.6)}
+}
+.pending-line{text-align:center;font-size:13px;color:var(--dim);margin-bottom:8px}
+.pending-line span{color:var(--accent-gold);font-weight:700}
+
+/* ===== NAV ===== */
+.nav-bar{
+  display:flex;justify-content:space-around;
+  background:var(--bg-card);border-radius:20px;
+  padding:8px 4px;margin-top:auto;
+  backdrop-filter:blur(12px);
+}
+.nav-btn{
+  background:none;border:none;color:var(--dim);
+  font-size:11px;padding:8px 12px;border-radius:14px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;
+  transition:color .25s ease, background .25s ease, transform .2s ease;
+}
+.nav-btn:active{transform:scale(.92)}
+.nav-btn .n-icon{font-size:20px;transition:transform .25s ease}
+.nav-btn.active{color:#fff;background:rgba(196,30,58,.28)}
+.nav-btn.active .n-icon{transform:scale(1.15)}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-120px);
+  background:var(--bg-card-2);padding:12px 22px;border-radius:14px;
+  z-index:9999;transition:transform .4s cubic-bezier(.34,1.4,.64,1), opacity .3s;
+  font-weight:600;max-width:90%;text-align:center;font-size:14px;
+  box-shadow:0 8px 30px rgba(0,0,0,.5),0 0 20px rgba(196,30,58,.25);
+  opacity:0;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ===== MENU LATERAL ===== */
+.menu-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:900;opacity:0;visibility:hidden;transition:.3s;
+}
+.menu-overlay.active{opacity:1;visibility:visible}
+.side-menu{
+  position:fixed;top:0;left:0;bottom:0;width:300px;max-width:85%;
+  background:linear-gradient(180deg,#1f1010,#140a0a);
+  z-index:910;transform:translateX(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;padding:20px 0;overflow-y:auto;
+  border-right:1px solid rgba(196,30,58,.25);
+}
+.side-menu.active{transform:translateX(0)}
+.menu-header{padding:0 20px 18px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:10px}
+.menu-header h3{font-size:18px}
+.menu-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 20px;color:var(--text);text-decoration:none;
+  font-size:15px;border:none;background:none;width:100%;
+  cursor:pointer;transition:background .2s;text-align:left;
+}
+.menu-item:active,.menu-item:hover{background:rgba(196,30,58,.15)}
+.menu-item .m-icon{font-size:20px;width:28px;text-align:center}
+.menu-divider{height:1px;background:rgba(255,255,255,.08);margin:8px 20px}
+
+/* ===== MODALES ===== */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.88);
+  z-index:950;display:none;align-items:flex-end;justify-content:center;
+}
+.modal.active{display:flex}
+.modal-sheet{
+  background:linear-gradient(180deg,#251515,#1a0f0f);
+  width:100%;max-width:450px;max-height:88vh;
+  border-radius:24px 24px 0 0;padding:20px 18px 36px;
+  overflow-y:auto;border-top:2px solid rgba(196,30,58,.3);
+  animation:slideUp .35s ease-out;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-head h2{font-size:18px}
+.close-modal{background:none;border:none;color:var(--dim);font-size:28px;cursor:pointer;line-height:1}
+
+.stat-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:14px}
+.item-card{background:rgba(0,0,0,.35);border-radius:14px;padding:14px;margin-bottom:12px}
+.buy-btn,.task-btn,.convert-btn{
+  width:100%;border:none;padding:11px;border-radius:12px;
+  background:var(--accent-red);color:#fff;font-weight:600;cursor:pointer;margin-top:8px;
+}
+.buy-btn:disabled,.task-btn:disabled{background:#333;color:#777}
+.price-val{font-weight:700;color:var(--accent-gold);font-size:15px}
+.tab-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.tab-btn{padding:10px;border-radius:12px;border:none;background:var(--bg-card);color:var(--text);cursor:pointer}
+.tab-btn.active{background:var(--accent-red)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+.char-banner{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,rgba(30,10,10,.8),rgba(50,15,15,.65));
+  border-radius:16px;padding:14px;margin-bottom:16px;
+  border:1px solid rgba(196,30,58,.25);
+}
+.char-avatar{
+  width:78px;height:78px;min-width:78px;border-radius:50%;
+  overflow:hidden;box-shadow:0 0 0 3px rgba(196,30,58,.4);
+}
+.char-avatar img{width:100%;height:100%;object-fit:cover}
+.char-info h4{font-size:15px;margin-bottom:3px}
+.char-info p{font-size:12px;color:var(--dim);line-height:1.3}
+
+.terms-content{font-size:13px;line-height:1.55;color:#ddd}
+.terms-content h3{margin:16px 0 6px;color:var(--accent-gold);font-size:14px}
+.terms-content p{margin-bottom:10px}
+
+.lang-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.lang-btn{padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:var(--bg-card);color:#fff;cursor:pointer}
+.lang-btn.active{border-color:var(--accent-red);background:rgba(196,30,58,.25)}
+
+.vip-box{background:rgba(0,0,0,.4);border-radius:14px;padding:14px;margin-top:12px;font-size:13px;line-height:1.5}
+.badge-active{background:rgba(16,185,129,.2);color:#10b981;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700}
+.badge-expired{background:rgba(239,68,68,.2);color:#ef4444;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700}
+
+.ref-input{flex:1;background:rgba(255,255,255,.08);border:none;border-radius:10px;padding:10px;color:#fff}
+.copy-btn{background:var(--accent-red);border:none;color:#fff;padding:10px 14px;border-radius:10px;font-weight:600}
+.convert-input{width:100%;background:rgba(255,255,255,.08);border:none;border-radius:10px;padding:12px;color:#fff;font-size:15px;margin:8px 0}
+</style>
 </head>
-
 <body>
 
-    <main class="game">
-
-        <!-- =====================================
-             BARRA SUPERIOR
-        ====================================== -->
-
-        <header class="top-bar">
-
-            <button id="profileButton" class="profile">
-
-                <div class="avatar">
-                    <span id="avatarLetter">N</span>
-                </div>
-
-                <div class="profile-info">
-                    <strong id="playerName">Ninja</strong>
-                    <span id="playerLevel">Nivel 1</span>
-                </div>
-
-            </button>
-
-
-            <div class="top-actions">
-
-                <div class="coins">
-                    <span>🪙</span>
-                    <strong id="coinsText">1,250</strong>
-                </div>
-
-                <button
-                    id="walletButton"
-                    class="top-action wallet-action"
-                >
-                    💰
-                    <span>Wallet</span>
-                </button>
-
-                <button
-                    id="shopButton"
-                    class="top-action shop-action"
-                >
-                    🛒
-                    <span>Tienda</span>
-                </button>
-
-                <button
-                    id="menuButton"
-                    class="menu-button"
-                    aria-label="Abrir menú"
-                >
-                    ☰
-                </button>
-
-            </div>
-
-        </header>
-
-
-        <!-- =====================================
-             ZONA DE COMBATE
-        ====================================== -->
-
-        <section class="battle-area">
-
-            <div class="boss-info">
-
-                <div class="enemy-name">
-
-                    <span id="enemyType">DEMONIO</span>
-
-                    <h1 id="enemyName">
-                        Akuma Rojo
-                    </h1>
-
-                </div>
-
-                <div class="health-text">
-
-                    <span>❤️</span>
-
-                    <span id="enemyHealthText">
-                        5,000 / 5,000
-                    </span>
-
-                </div>
-
-                <div class="health-bar">
-
-                    <div
-                        id="enemyHealthBar"
-                        class="health-fill"
-                    ></div>
-
-                </div>
-
-            </div>
-
-
-            <div
-                id="enemy"
-                class="enemy"
-            >
-
-                <div class="enemy-aura"></div>
-
-                <div class="enemy-character">
-
-                    <div class="enemy-head">
-
-                        <div class="horn horn-left"></div>
-
-                        <div class="horn horn-right"></div>
-
-                        <div class="enemy-face">
-
-                            <div class="eye eye-left"></div>
-
-                            <div class="eye eye-right"></div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="enemy-body">
-
-                        <div
-                            class="armor armor-left"
-                        ></div>
-
-                        <div
-                            class="armor armor-right"
-                        ></div>
-
-                        <div class="chest-core"></div>
-
-                    </div>
-
-                    <div class="enemy-cloak"></div>
-
-                </div>
-
-                <div
-                    id="damageNumber"
-                    class="damage-number"
-                ></div>
-
-            </div>
-
-        </section>
-        <!-- =====================================
-             ENERGÍA
-        ====================================== -->
-
-        <section class="energy-section">
-
-            <div class="energy-header">
-
-                <span>
-                    ⚡ ENERGÍA
-                </span>
-
-                <strong id="energyText">
-                    100 / 100
-                </strong>
-
-            </div>
-
-            <div class="energy-bar">
-
-                <div
-                    id="energyBar"
-                    class="energy-fill"
-                ></div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================
-             ATAQUES
-        ====================================== -->
-
-        <section class="attack-section">
-
-            <button
-                id="comboButton"
-                class="attack-button combo"
-            >
-
-                <span class="attack-icon">
-                    🔥
-                </span>
-
-                <strong>
-                    COMBO
-                </strong>
-
-                <small>
-                    3 GOLPES
-                    <br>
-                    -4 ⚡
-                </small>
-
-            </button>
-
-
-            <button
-                id="attackButton"
-                class="attack-button normal"
-            >
-
-                <span class="attack-icon">
-                    ⚔️
-                </span>
-
-                <strong>
-                    ATAQUE
-                </strong>
-
-                <small>
-                    NORMAL
-                    <br>
-                    -2 ⚡
-                </small>
-
-            </button>
-
-
-            <button
-                id="criticalButton"
-                class="attack-button critical"
-            >
-
-                <span class="attack-icon">
-                    💥
-                </span>
-
-                <strong>
-                    CRÍTICO
-                </strong>
-
-                <small>
-                    PODER
-                    <br>
-                    -8 ⚡
-                </small>
-
-            </button>
-
-        </section>
-
-
-        <!-- =====================================
-             MENÚ LATERAL
-        ====================================== -->
-
-        <aside
-            id="sideMenu"
-            class="side-menu"
-        >
-
-            <div class="menu-header">
-
-                <h2>
-                    Ninja Battle
-                </h2>
-
-                <button
-                    id="closeMenu"
-                    class="close-menu"
-                >
-                    ×
-                </button>
-
-            </div>
-
-            <div class="menu-player">
-
-                <div class="menu-avatar">
-
-                    <span id="menuAvatarLetter">
-                        N
-                    </span>
-
-                </div>
-
-                <div>
-
-                    <strong id="menuPlayerName">
-                        Ninja
-                    </strong>
-
-                    <span id="menuPlayerLevel">
-                        Nivel 1
-                    </span>
-
-                </div>
-
-            </div>
-            <nav class="menu-options">
-
-                <button id="profileMenuOption">
-                    👤
-                    <span>Perfil</span>
-                </button>
-
-                <button id="settingsMenuOption">
-                    ⚙️
-                    <span>Ajustes</span>
-                </button>
-
-                <button id="rewardsMenuOption">
-                    🎁
-                    <span>Recompensas</span>
-                </button>
-
-                <button id="adsMenuOption">
-                    📺
-                    <span>Ver anuncios</span>
-                </button>
-
-                <button id="referralsMenuOption">
-                    👥
-                    <span>Referidos</span>
-                </button>
-
-                <button id="partnersMenuOption">
-                    🤝
-                    <span>Socios</span>
-                </button>
-
-                <button id="missionsMenuOption">
-                    🎯
-                    <span>Misiones externas</span>
-                </button>
-
-                <button id="walletMenuOption">
-                    💰
-                    <span>Wallet TON</span>
-                </button>
-
-            </nav>
-
-        </aside>
-
-
-        <div
-            id="menuOverlay"
-            class="menu-overlay"
-        ></div>
-
-    </main>
-    
-<!-- ==========================================
-     TIENDA DE ARMAS
-     ========================================== -->
-
-<div id="shop" class="shop-panel" style="display: none;">
-
-    <div class="shop-header">
-        <h2>🛒 TIENDA</h2>
-
-        <button
-            type="button"
-            onclick="closeShop()">
-            CERRAR
-        </button>
+<div class="app">
+  <div class="toast" id="toast"></div>
+
+  <!-- HEADER: solo Balance -->
+  <div class="header-actions">
+    <div class="balance-card">
+      <div class="balance-label">Balance Total</div>
+      <div class="balance-amount">
+        <div class="anim-icon">A</div>
+        <span id="token-count">0.000</span>
+      </div>
+      <div class="balance-rates">
+        <div class="rate-pill">⚡ <span id="mine-rate">0.001</span>/s</div>
+        <div class="rate-pill">🔥 <span id="pending-amount">0</span></div>
+      </div>
     </div>
+  </div>
 
-    <div class="shop-coins">
-        🪙 Monedas:
-        <span id="shopCoins">0</span>
+  <!-- ENERGÍA DELGADA -->
+  <div class="energy-row">
+    <div class="energy-label">⚡ Energía</div>
+    <div class="energy-track"><div class="energy-fill" id="energy-bar"></div></div>
+    <div class="energy-text" id="energy-text">100/100</div>
+  </div>
+  <button id="recharge-btn" onclick="rechargeEnergy()" style="display:none;width:100%;margin-bottom:12px;padding:11px;border:none;border-radius:12px;background:linear-gradient(90deg,#7b2cbf,#c41e3a);color:#fff;font-weight:700;font-size:13px;cursor:pointer">
+    📺 Ver anuncio para recargar energía (2h)
+  </button>
+
+  <div class="pending-line">Acumulado: <span id="accumulated-display">0.000 ANIM</span></div>
+
+  <!-- COLLECT + botones laterales (Menú arriba · Ajustes abajo) -->
+  <div class="collect-wrap">
+    <button class="collect-btn" id="collect-button">
+      <img src="https://i.postimg.cc/RFRQfbgJ/1788820020964.jpg" alt="Recolectar">
+      <span class="collect-label">RECOLECTAR</span>
+    </button>
+    <div class="side-btns">
+      <button class="menu-btn" onclick="openMenu()" title="Menú">☰</button>
+      <button class="settings-btn" onclick="openModal('settings')" title="Ajustes">⚙️</button>
     </div>
+  </div>
 
-    <div id="shopWeapons"></div>
-
+  <!-- NAV -->
+  <div class="nav-bar">
+    <button class="nav-btn active" data-tab="mine"><span class="n-icon">⛏️</span>Minar</button>
+    <button class="nav-btn" data-tab="upgrades"><span class="n-icon">⚡</span>Respiración</button>
+    <button class="nav-btn" data-tab="rewards"><span class="n-icon">🎁</span>Recompensas</button>
+  </div>
 </div>
-    <script src="script.js?v=2"></script>
 
+<!-- ========== MENÚ LATERAL ========== -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="side-menu" id="sideMenu">
+  <div class="menu-header">
+    <h3>Menú</h3>
+  </div>
+
+  <button class="menu-item" onclick="openModal('profile');closeMenu()">
+    <span class="m-icon">👤</span> Perfil de Usuario
+  </button>
+  <button class="menu-item" onclick="openModal('level');closeMenu()">
+    <span class="m-icon">📈</span> Progreso de Nivel
+  </button>
+  <button class="menu-item" onclick="openModal('wallet');closeMenu()">
+    <span class="m-icon">💼</span> Billetera
+  </button>
+  <button class="menu-item" onclick="openModal('friends');closeMenu()">
+    <span class="m-icon">👥</span> Amigos / Referidos
+  </button>
+
+  <div class="menu-divider"></div>
+
+  <a class="menu-item" href="https://t.me/ANIME_MINING_OFICIAL" target="_blank">
+    <span class="m-icon">📢</span> Página Oficial
+  </a>
+  <a class="menu-item" href="https://t.me/+c34ziM0gjlJjMWJh" target="_blank">
+    <span class="m-icon">💬</span> Grupo de Chat
+  </a>
+  <a class="menu-item" href="https://t.me/+J52GmerlZPpmZGVh" target="_blank">
+    <span class="m-icon">🛠️</span> Soporte
+  </a>
+  <button class="menu-item" onclick="openModal('terms');closeMenu()">
+    <span class="m-icon">📄</span> Términos y Condiciones
+  </button>
+
+  <div class="menu-divider"></div>
+
+  <button class="menu-item" onclick="openModal('settings');closeMenu()">
+    <span class="m-icon">⚙️</span> Ajustes
+  </button>
+</div>
+
+<!-- ========== MODALES ========== -->
+
+<!-- PERFIL -->
+<div class="modal" id="modal-profile">
+  <div class="modal-sheet">
+    <div class="modal-head"><h2>👤 Perfil</h2><button class="close-modal" onclick="closeModal('profile')">×</button></div>
+    <div class="stat-row"><span>Usuario</span><span id="modal-username">—</span></div>
+    <div class="stat-row"><span>Nivel</span><span id="modal-level">Nv. 1</span></div>
+    <div class="stat-row"><span>Estado VIP</span><span id="modal-vip">❌ Gratuito</span></div>
+    <div class="stat-row"><span>Invertido</span><span id="modal-invested">0.00 TON</span></div>
+    <div class="stat-row"><span>Total Minado</span><span id="modal-total">0 ANIM</span></div>
+  </div>
+</div>
+
+<!-- NIVEL -->
+<div class="modal" id="modal-level">
+  <div class="modal-sheet">
+    <div class="modal-head"><h2>📈 Progreso de Nivel</h2><button class="close-modal" onclick="closeModal('level')">×</button></div>
+    <div style="text-align:center;margin:20px 0">
+      <div style="font-size:42px;font-weight:900" id="level-big">1</div>
+      <div style="color:var(--dim);margin-top:4px">Nivel actual</div>
+    </div>
+    <div class="stat-row"><span>XP</span><span id="level-text">0 / 100</span></div>
+    <div style="height:8px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;margin-top:8px">
+      <div id="level-bar" style="height:100%;width:5%;background:linear-gradient(90deg,var(--accent-red),var(--accent-gold));border-radius:10px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BILLETERA -->
+<div class="modal" id="modal-wallet">
+  <div class="modal-sheet">
+    <div class="modal-head"><h2>💼 Billetera</h2><button class="close-modal" onclick="closeModal('wallet')">×</button></div>
+    <div class="char-banner">
+      <div class="char-avatar"><img src="https://i.postimg.cc/PxLJ7RLs/image-eede4039-2.jpg" alt=""></div>
+      <div class="char-info">
+        <h4>Tanjiro & Nezuko</h4>
+        <p>100,000 ANIM = 1 TON. VIP = retiro inmediato.</p>
+      </div>
+    </div>
+    <div class="item-card">
+      <div style="display:flex;justify-content:space-between"><span>🪙 Balance ANIM</span><span class="price-val" id="wallet-anim">0.000</span></div>
+    </div>
+    <div class="item-card">
+      <div style="display:flex;justify-content:space-between"><span>💎 Equivalente TON</span><span class="price-val" id="wallet-ton">0.0000</span></div>
+    </div>
+    <div id="wallet-address-display" style="background:rgba(255,255,255,.07);padding:12px;border-radius:10px;margin:12px 0;font-size:13px;color:var(--dim);word-break:break-all">
+      📌 Conecta tu billetera TON
+    </div>
+    <button class="buy-btn" id="connect-wallet-btn">🔗 Conectar Billetera TON</button>
+
+    <div style="margin-top:20px">
+      <h4 style="margin-bottom:8px">💱 Convertir y Retirar</h4>
+      <p style="font-size:11px;color:var(--dim);line-height:1.4;margin-bottom:8px">
+        Mínimo 50,000 ANIM · Retiro inmediato con VIP o ≥5 TON invertidos
+      </p>
+      <input type="number" class="convert-input" id="convert-amount" placeholder="Cantidad de ANIM" min="50000">
+      <div class="stat-row"><span>Recibirás</span><span id="convert-result">0.0000 TON</span></div>
+      <button class="convert-btn" id="convert-btn">Solicitar Retiro</button>
+    </div>
+  </div>
+</div>
+
+<!-- AMIGOS -->
+<div class="modal" id="modal-friends">
+  <div class="modal-sheet">
+    <div class="modal-head"><h2>👥 Referidos</h2><button class="close-modal" onclick="closeModal('friends')">×</button></div>
+    <div class="char-banner">
+      <div class="char-avatar"><img src="https://i.postimg.cc/MKBRHvpJ/Screenshot-20260906-210320.jpg" alt=""></div>
+      <div class="char-info">
+        <h4>Los Pilares</h4>
+        <p>Recluta cazadores y gana recompensas</p>
+      </div>
+    </div>
+    <div class="item-card">
+      <h4 style="margin-bottom:8px">🔗 Tu enlace</h4>
+      <div style="display:flex;gap:8px">
+        <input type="text" class="ref-input" id="ref-link" readonly>
+        <button class="copy-btn" onclick="copyRefLink()">Copiar</button>
+      </div>
+      <p style="font-size:12px;color:var(--dim);margin-top:8px">+50 ANIM para ti · +20 ANIM para tu amigo</p>
+    </div>
+    <div class="stat-row"><span>Invitados</span><span id="ref-count">0</span></div>
+    <div class="stat-row"><span>Recompensas</span><span id="ref-rewards">0 ANIM</span></div>
+  </div>
+</div>
+
+<!-- AJUSTES -->
+<div class="modal" id="modal-settings">
+  <div class="modal-sheet">
+    <div class="modal-head"><h2>⚙️ Ajustes</h2><button class="close-modal" onclick="closeModal('settings')">×</button></div>
+    
+    <div class="item-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span>🔊 Sonido</span>
+        <button class="buy-btn" style="width:auto;padding:8px 16px;margin:0" id="soundToggle" onclick="toggleSound()">🔇 Off</button>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <h4 style="margin-bottom:10px">🌐 Idioma</h4>
+      <div class="lang-row">
+        <button class="lang-btn active" data-lang="es">🇪🇸 Español</button>
+        <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+        <button class="lang-btn" data-lang="ru">🇷🇺 Русский</button>
+        <button class="lang-btn" data-lang="pt">🇧🇷 Português</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TÉRMINOS -->
+<div class="modal" id="modal-terms">
+  <div class="modal-sheet">
+    <div class="modal-head"><h2>📄 Términos y Condiciones</h2><button class="close-modal" onclick="closeModal('terms')">×</button></div>
+    <div class="terms-content">
+      <h3>1. Aceptación de los Términos</h3>
+      <p>Al acceder, registrarse o interactuar con la miniapp Anime Mining, el usuario declara haber leído, comprendido y aceptado en su totalidad los presentes Términos y Condiciones. Si no está de acuerdo con las disposiciones aquí contenidas, debe abstenerse de utilizar la aplicación.</p>
+
+      <h3>2. Jugabilidad, Economía del Juego y Recompensas</h3>
+      <p><strong>Mecánica:</strong> Anime Mining es un juego interactivo donde los usuarios generan activos y recompensas digitales mediante interacciones activas en la interfaz, optimización de tarjetas o personajes, superación de misiones y participación en el sistema de referidos.</p>
+      <p><strong>Integración Legal y Operativa:</strong> La aplicación opera bajo el cumplimiento de los marcos normativos e infraestructuras técnicas aplicables para el manejo y distribución de activos digitales.</p>
+      <p><strong>Ajustes del Sistema:</strong> La administración se reserva el derecho de ajustar y equilibrar los parámetros de la economía interna (costos de mejoras, velocidad de minería y distribución de recompensas) para garantizar la estabilidad operativa del proyecto.</p>
+
+      <h3>3. Pagos en Criptomoneda TON y Fluctuación del Mercado</h3>
+      <p><strong>Moneda de Pago:</strong> Todas las recompensas, retiros y transacciones financieras aplicables dentro de la plataforma se realizan de manera exclusiva en la criptomoneda Toncoin (TON) a través de la red blockchain correspondiente.</p>
+      <p><strong>Independencia del Mercado:</strong> El valor monetario o tasa de cambio de TON en el mercado secundario es determinado de manera totalmente independiente por la oferta y la demanda global. Anime Mining no controla, influye ni se hace responsable por el precio, volatilidad o fluctuaciones del mercado de TON.</p>
+      <p><strong>Cumplimiento de Pagos:</strong> Los pagos se procesarán estrictamente por la cantidad fija de TON acumulada o solicitada conforme a las reglas del juego, independientemente de si el valor del token sube o baja en el mercado al momento del retiro.</p>
+
+      <h3>4. Sistemas Anti-Trampa y Monitoreo</h3>
+      <p>Para mantener un entorno justo e íntegro, Anime Mining cuenta con algoritmos automatizados y herramientas de auditoría en tiempo real que evalúan patrones de interacción, frecuencia de toques, métricas de red, identificadores de dispositivo y direcciones IP.</p>
+
+      <h3>5. Prohibición de Bots, Automatización e Intentos de Fraude</h3>
+      <p>Queda estrictamente prohibida cualquier práctica que busque alterar o manipular el funcionamiento legítimo del juego, incluyendo bots, scripts, multicuentas, explotación de bugs y manipulación de identidad digital.</p>
+
+      <h3>6. Bloqueo de Cuentas, Retención de Ganancias y Resolución</h3>
+      <p>Ante la detección o sospecha razonable de fraude: suspensión preventiva, retención cautelar de saldos y, si se confirma la infracción, baneo permanente con pérdida de fondos. Si no hubo falta, se restablece todo.</p>
+
+      <h3>7. Propiedad Intelectual</h3>
+      <p>Todos los derechos sobre el código, arte, diseño y contenido de Anime Mining pertenecen en exclusiva a los desarrolladores. Queda prohibida su copia o redistribución sin autorización.</p>
+
+      <h3>8. Limitación de Responsabilidad y Riesgos Cripto</h3>
+      <p>Anime Mining no se responsabiliza por retrasos de la red TON, fallas de billeteras de terceros o interrupciones por mantenimiento. El usuario asume la responsabilidad de su propia billetera.</p>
+
+      <h3>9. Modificaciones del Servicio y Términos</h3>
+      <p>La administración se reserva el derecho de modificar estos Términos en cualquier momento. El uso continuado implica la aceptación de las modificaciones.</p>
+    </div>
+  </div>
+</div>
+
+<!-- UPGRADES (Respiración + VIP) -->
+<div class="modal" id="modal-upgrades">
+  <div class="modal-sheet">
+    <div class="modal-head"><h2>⚡ Respiraciones & VIP</h2><button class="close-modal" onclick="closeModal('upgrades')">×</button></div>
+    <div class="char-banner">
+      <div class="char-avatar"><img src="https://i.postimg.cc/mDckn5P0/image-9ac8780f-2.jpg" alt=""></div>
+      <div class="char-info">
+        <h4>Muzan Kibutsuji</h4>
+        <p>VIP 5 TON / 15 días. Cumple todos los días y gana.</p>
+      </div>
+    </div>
+    <div class="tab-buttons">
+      <button class="tab-btn active" data-subtab="upgrades-tab">🔥 Respiraciones</button>
+      <button class="tab-btn" data-subtab="vip-tab">👑 VIP</button>
+    </div>
+    <div class="tab-content active" id="upgrades-tab">
+      <p style="text-align:center;font-size:12px;color:var(--dim);margin-bottom:12px">Nivel 1 con ANIM · Niveles 2+ en TON (90 días)</p>
+      <div id="breath-list"></div>
+    </div>
+    <div class="tab-content" id="vip-tab">
+      <div class="item-card">
+        <h5>👑 VIP Demon Slayer</h5>
+        <p style="font-size:13px;margin:8px 0;line-height:1.45">
+          • 5 TON · 15 días<br>
+          • +50% minería<br>
+          • Recompensas diarias altas<br>
+          • Si cumples los 15 días: recuperas 5 TON + ganas 1 TON extra
+        </p>
+        <div class="price-val" style="margin:8px 0">5.0 TON</div>
+        <button class="buy-btn" id="buy-vip-btn" onclick="buyVIP()">Adquirir VIP</button>
+      </div>
+      <div class="vip-box" id="vip-status-box">No tienes VIP activo</div>
+    </div>
+  </div>
+</div>
+
+<!-- RECOMPENSAS -->
+<div class="modal" id="modal-rewards">
+  <div class="modal-sheet">
+    <div class="modal-head"><h2>🎁 Recompensas Diarias</h2><button class="close-modal" onclick="closeModal('rewards')">×</button></div>
+    <div class="char-banner">
+      <div class="char-avatar"><img src="https://i.postimg.cc/wvtMrGtY/image-fd908bc5-2.jpg" alt=""></div>
+      <div class="char-info">
+        <h4>Hermanos Tsugikuni</h4>
+        <p>Cumple tareas diarias. Con VIP las recompensas son mucho mayores.</p>
+      </div>
+    </div>
+
+    <!-- CHECK-IN -->
+    <div class="item-card">
+      <h4>📅 Check-in Diario</h4>
+      <p id="daily-status" style="font-size:13px;margin:6px 0;color:var(--dim)">Disponible</p>
+      <button class="task-btn" id="daily-btn" onclick="claimDaily()">Reclamar</button>
+    </div>
+
+    <h4 style="margin:16px 0 10px;font-size:14px;color:var(--accent-gold)">📺 Tareas con Anuncio (AdsGram) — 1 a 5</h4>
+    <div id="ads-tasks-list"></div>
+
+    <h4 style="margin:18px 0 10px;font-size:14px;color:var(--accent-gold)">⚔️ Misiones Externas — 6 a 15</h4>
+    <div id="external-tasks-list"></div>
+  </div>
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyAnvFkbl7tS8wtOD0Dewg5zHj_q3zlPcgs",
+    authDomain: "anime-mining-tlg.firebaseapp.com",
+    projectId: "anime-mining-tlg",
+    storageBucket: "anime-mining-tlg.firebasestorage.app",
+    messagingSenderId: "443143848384",
+    appId: "1:443143848384:web:c925cd8754f8094bef4825"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  window.firebaseDB = { db, doc, setDoc, getDoc, increment };
+  window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
+<script>
+const ANIM_PER_TON = 100000;
+const EXPIRATION_90_DAYS = 90 * 24 * 60 * 60 * 1000;
+const VIP_DURATION = 15 * 24 * 60 * 60 * 1000;
+const VIP_COST = 5;
+const VIP_MINING_BONUS = 0.50;
+const DAILY_NORMAL = 50;
+const DAILY_VIP = 15000;
+
+// ========== CONFIGURACIÓN (cámbialos por tus valores reales) ==========
+const ADSGRAM_BLOCK_ID = "YOUR_ADSGRAM_BLOCK_ID";          // partner.adsgram.ai → Rewarded block
+const TON_MERCHANT_ADDRESS = "EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c"; // tu wallet
+const TONCONNECT_MANIFEST_URL = "https://ton-connect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json";
+// =====================================================================
+
+let AdController = null;
+let tonConnectUI = null;
+
+// ===== 15 TAREAS DIARIAS =====
+const TASKS = [
+  { id: 1,  type: 'ad', title: '📺 Anuncio 1', desc: 'Mira un anuncio corto', rewardNormal: 40, rewardVip: 3000 },
+  { id: 2,  type: 'ad', title: '📺 Anuncio 2', desc: 'Mira un anuncio corto', rewardNormal: 40, rewardVip: 3000 },
+  { id: 3,  type: 'ad', title: '📺 Anuncio 3', desc: 'Mira un anuncio corto', rewardNormal: 50, rewardVip: 3500 },
+  { id: 4,  type: 'ad', title: '📺 Anuncio 4', desc: 'Mira un anuncio corto', rewardNormal: 50, rewardVip: 3500 },
+  { id: 5,  type: 'ad', title: '📺 Anuncio 5', desc: 'Mira un anuncio corto', rewardNormal: 60, rewardVip: 4000 },
+  { id: 6,  type: 'external', title: '📢 Unirse al Canal Oficial', desc: 'Únete al canal de Anime Mining', rewardNormal: 80, rewardVip: 5000, link: 'https://t.me/ANIME_MINING_OFICIAL' },
+  { id: 7,  type: 'external', title: '💬 Entrar al Grupo de Chat', desc: 'Únete al grupo oficial', rewardNormal: 80, rewardVip: 5000, link: 'https://t.me/+c34ziM0gjlJjMWJh' },
+  { id: 8,  type: 'external', title: '🛠️ Seguir Soporte', desc: 'Entra al canal de soporte', rewardNormal: 60, rewardVip: 4000, link: 'https://t.me/+J52GmerlZPpmZGVh' },
+  { id: 9,  type: 'external', title: '⭐ Calificar la App', desc: 'Deja una reseña positiva', rewardNormal: 100, rewardVip: 6000 },
+  { id: 10, type: 'external', title: '👥 Invitar 1 Amigo', desc: 'Invita a un amigo con tu link', rewardNormal: 120, rewardVip: 7000 },
+  { id: 11, type: 'external', title: '🔥 Seguir en X / Twitter', desc: 'Sigue la cuenta oficial (próximamente)', rewardNormal: 70, rewardVip: 4500 },
+  { id: 12, type: 'external', title: '📸 Seguir en Instagram', desc: 'Sigue la cuenta oficial (próximamente)', rewardNormal: 70, rewardVip: 4500 },
+  { id: 13, type: 'external', title: '🎮 Unirse a otra Mini-App', desc: 'Prueba una app partner (próximamente)', rewardNormal: 90, rewardVip: 5500 },
+  { id: 14, type: 'external', title: '📰 Leer las Noticias', desc: 'Lee el último anuncio del canal', rewardNormal: 50, rewardVip: 3500, link: 'https://t.me/ANIME_MINING_OFICIAL' },
+  { id: 15, type: 'external', title: '🗡️ Misión Especial del Día', desc: 'Completa la misión diaria especial', rewardNormal: 150, rewardVip: 8000 }
+];
+
+const BREATHS = [
+  { level:1, name:"Respiración del Insecto", rate:0.0015, costType:"ANIM", cost:50 },
+  { level:2, name:"Respiración de la Flor", rate:0.0035, costType:"TON", cost:0.1 },
+  { level:3, name:"Respiración del Amor", rate:0.0080, costType:"TON", cost:0.25 },
+  { level:4, name:"Respiración de la Bestia", rate:0.0180, costType:"TON", cost:0.5 },
+  { level:5, name:"Respiración del Sonido", rate:0.0400, costType:"TON", cost:1.0 },
+  { level:6, name:"Respiración del Agua", rate:0.0900, costType:"TON", cost:2.0 },
+  { level:7, name:"Respiración de la Niebla", rate:0.1800, costType:"TON", cost:3.5 },
+  { level:8, name:"Respiración de la Serpiente", rate:0.3500, costType:"TON", cost:5.0 },
+  { level:9, name:"Respiración de la Llama", rate:0.7000, costType:"TON", cost:8.0 },
+  { level:10, name:"Respiración del Rayo", rate:1.4000, costType:"TON", cost:12.0 },
+  { level:11, name:"Respiración del Viento", rate:2.8000, costType:"TON", cost:20.0 },
+  { level:12, name:"Respiración de la Roca", rate:5.5000, costType:"TON", cost:35.0 },
+  { level:13, name:"Respiración Lunar", rate:11.000, costType:"TON", cost:50.0 },
+  { level:14, name:"Respiración del Sol", rate:22.000, costType:"TON", cost:80.0 }
+];
+
+let soundEnabled = false;
+let audioCtx = null;
+
+let state = {
+  userId: null, username: 'Usuario', firstName: 'Minero',
+  balance: 0, pending: 0, totalMined: 0, miningRate: 0.001,
+  energy: 100, maxEnergy: 100, level: 1, xp: 0, xpToNext: 100,
+  breathLevel: 0, purchasedBreaths: {},
+  vip: null, tonInvested: 0,
+  lastDaily: null,
+  dailyTasks: { date: null, checkin: false, completed: {} },
+  referrals: 0, referralRewards: 0, referredBy: null,
+  walletAddress: null, lastTimestamp: Date.now(), lang: 'es', refLink: ''
+};
+
+const isValidId = id => typeof id === 'string' && /^[a-zA-Z0-9_-]{3,100}$/.test(id);
+function todayStr(){ return new Date().toISOString().split('T')[0]; }
+function isVipActive(){ return state.vip && state.vip.expires > Date.now(); }
+function getVipDaysLeft(){ return isVipActive() ? Math.ceil((state.vip.expires - Date.now())/(1000*60*60*24)) : 0; }
+
+function initTelegram(){
+  if(window.Telegram?.WebApp){
+    const tg = window.Telegram.WebApp;
+    tg.ready(); tg.expand();
+    tg.setHeaderColor('#1a0f0f'); tg.setBackgroundColor('#1a0f0f');
+    if(tg.initDataUnsafe?.user){
+      const u = tg.initDataUnsafe.user;
+      state.username = u.username || 'Usuario';
+      state.firstName = u.first_name || 'Minero';
+      return 'tg_' + u.id;
+    }
+  }
+  let uid = localStorage.getItem('firebaseUserId');
+  if(!uid){ uid = 'user_' + Math.random().toString(36).substr(2,12); localStorage.setItem('firebaseUserId', uid); }
+  return uid;
+}
+state.userId = initTelegram();
+state.refLink = location.origin + location.pathname + '?ref=' + state.userId;
+
+function recalculateMiningRate(){
+  let base = 0.001;
+  const now = Date.now();
+  for(let lvl=1; lvl<=state.breathLevel; lvl++){
+    const b = BREATHS.find(x=>x.level===lvl);
+    if(!b) continue;
+    if(lvl===1) base += b.rate;
+    else if(state.purchasedBreaths[lvl] > now) base += b.rate;
+  }
+  if(isVipActive()) base *= (1 + VIP_MINING_BONUS);
+  state.miningRate = Number(base.toFixed(4));
+}
+
+function renderBreathList(){
+  const c = document.getElementById('breath-list');
+  if(!c) return;
+  c.innerHTML = '';
+  const now = Date.now();
+  BREATHS.forEach(b=>{
+    const unlocked = state.breathLevel >= b.level;
+    const isNext = state.breathLevel + 1 === b.level;
+    const exp = state.purchasedBreaths[b.level];
+    let status = '', btn = '';
+    if(unlocked){
+      if(b.level===1){ status='<span class="badge-active">Permanente</span>'; btn='<button class="buy-btn" disabled>Activo</button>'; }
+      else if(exp > now){ status=`<span class="badge-active">${Math.ceil((exp-now)/86400000)}d</span>`; btn='<button class="buy-btn" disabled>Adquirida</button>'; }
+      else { status='<span class="badge-expired">Expirada</span>'; btn=`<button class="buy-btn" onclick="buyBreath(${b.level})">Renovar</button>`; }
+    } else if(isNext){ status='<span style="color:var(--accent-gold)">Siguiente</span>'; btn=`<button class="buy-btn" onclick="buyBreath(${b.level})">Comprar</button>`; }
+    else { status='🔒'; btn='<button class="buy-btn" disabled>Bloqueada</button>'; }
+    const div = document.createElement('div');
+    div.className = 'item-card';
+    div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <div><h5 style="font-size:14px">${b.level}. ${b.name}</h5>
+      <p style="font-size:12px;color:var(--dim)">+${b.rate}/s ${status}</p></div>
+      <div style="text-align:right"><div class="price-val">${b.cost} ${b.costType}</div>${btn}</div></div>`;
+    c.appendChild(div);
+  });
+}
+
+// ========== ADSGRAM ==========
+function initAdsGram(){
+  try{
+    if(window.Adsgram && ADSGRAM_BLOCK_ID && ADSGRAM_BLOCK_ID !== "YOUR_ADSGRAM_BLOCK_ID"){
+      AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+      console.log("AdsGram listo");
+    } else {
+      console.warn("AdsGram: configura ADSGRAM_BLOCK_ID real");
+    }
+  }catch(e){ console.warn("AdsGram init error", e); }
+}
+
+function showRewardedAd(){
+  return new Promise((resolve, reject) => {
+    if(!AdController){
+      showToast("📺 (Modo demo) Anuncio simulado");
+      setTimeout(() => resolve({demo:true}), 1200);
+      return;
+    }
+    AdController.show()
+      .then((result) => resolve(result))
+      .catch((err) => reject(err));
+  });
+}
+
+// ========== TON CONNECT ==========
+function initTonConnect(){
+  try{
+    if(!window.TON_CONNECT_UI) {
+      console.warn("TON Connect UI no cargado");
+      return;
+    }
+    tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+      manifestUrl: TONCONNECT_MANIFEST_URL,
+    });
+
+    tonConnectUI.onStatusChange((wallet) => {
+      if(wallet && wallet.account){
+        state.walletAddress = wallet.account.address;
+        showToast("✅ Billetera TON conectada");
+        updateUI();
+        saveUserData();
+      } else {
+        if(state.walletAddress){
+          state.walletAddress = null;
+          updateUI();
+          saveUserData();
+        }
+      }
+    });
+
+    if(tonConnectUI.account){
+      state.walletAddress = tonConnectUI.account.address;
+    }
+  }catch(e){ console.warn("TON Connect init error", e); }
+}
+
+async function connectTonWallet(){
+  if(!tonConnectUI) return showToast("TON Connect no disponible");
+  try{
+    await tonConnectUI.openModal();
+  }catch(e){
+    showToast("Error al abrir conexión de billetera");
+  }
+}
+
+async function payWithTON(amountTON, comment = "Anime Mining"){
+  if(!tonConnectUI) {
+    showToast("TON Connect no disponible");
+    return false;
+  }
+  if(!tonConnectUI.connected){
+    showToast("Conecta tu billetera primero");
+    await connectTonWallet();
+    return false;
+  }
+  if(TON_MERCHANT_ADDRESS.includes("AAAA") || TON_MERCHANT_ADDRESS.length < 20){
+    showToast("⚠️ Configura TON_MERCHANT_ADDRESS real");
+    const ok = confirm(`DEMO: ¿Simular pago de ${amountTON} TON?\n(Configura tu wallet real para pagos verdaderos)`);
+    return ok;
+  }
+
+  const nano = Math.floor(amountTON * 1e9).toString();
+  const tx = {
+    validUntil: Math.floor(Date.now() / 1000) + 300,
+    messages: [{
+      address: TON_MERCHANT_ADDRESS,
+      amount: nano
+    }]
+  };
+
+  try{
+    showToast("⏳ Abriendo billetera...");
+    const result = await tonConnectUI.sendTransaction(tx);
+    console.log("TX result", result);
+    return true;
+  }catch(e){
+    console.error(e);
+    showToast("❌ Pago cancelado o fallido");
+    return false;
+  }
+}
+
+function buyBreath(level){
+  const b = BREATHS.find(x=>x.level===level);
+  if(!b) return;
+  if(b.costType==='ANIM'){
+    if(state.balance < b.cost) return showToast('❌ Saldo insuficiente');
+    state.balance = +(state.balance - b.cost).toFixed(3);
+    applyBreath(level, b);
+  } else {
+    (async () => {
+      const paid = await payWithTON(b.cost, `Breath Lv${level}`);
+      if(!paid) return;
+      state.tonInvested = +(state.tonInvested + b.cost).toFixed(2);
+      applyBreath(level, b);
+    })();
+  }
+}
+
+function applyBreath(level, b){
+  if(level > state.breathLevel) state.breathLevel = level;
+  if(level > 1) state.purchasedBreaths[level] = Date.now() + EXPIRATION_90_DAYS;
+  showToast(`🔥 ${b.name} activada`);
+  recalculateMiningRate(); updateUI(); saveUserData();
+}
+
+function buyVIP(){
+  if(isVipActive()) return showToast('Ya tienes VIP activo');
+  (async () => {
+    const paid = await payWithTON(VIP_COST, "VIP Demon Slayer 15d");
+    if(!paid) return;
+    state.tonInvested = +(state.tonInvested + VIP_COST).toFixed(2);
+    state.vip = { start: Date.now(), expires: Date.now() + VIP_DURATION };
+    state.dailyTasks = { date: todayStr(), checkin: false, completed: {} };
+    showToast('👑 VIP activado 15 días');
+    recalculateMiningRate(); updateUI(); saveUserData();
+  })();
+}
+
+function resetDailyIfNeeded(){
+  const t = todayStr();
+  if(state.dailyTasks.date !== t){
+    state.dailyTasks = { date: t, checkin: false, completed: {} };
+  }
+  if(!state.dailyTasks.completed) state.dailyTasks.completed = {};
+}
+
+function claimDaily(){
+  resetDailyIfNeeded();
+  if(state.dailyTasks.checkin) return showToast('Ya reclamaste hoy');
+  const reward = isVipActive() ? DAILY_VIP : DAILY_NORMAL;
+  state.balance = +(state.balance + reward).toFixed(3);
+  state.totalMined = +(state.totalMined + reward).toFixed(3);
+  state.dailyTasks.checkin = true;
+  showToast(`✅ Check-in: +${reward.toLocaleString()} ANIM`);
+  updateUI(); saveUserData();
+}
+
+function claimTask(id){
+  resetDailyIfNeeded();
+  if(state.dailyTasks.completed[id]) return showToast('Ya completaste esta tarea hoy');
+
+  const task = TASKS.find(t => t.id === id);
+  if(!task) return;
+
+  const giveReward = () => {
+    const reward = isVipActive() ? task.rewardVip : task.rewardNormal;
+    state.balance = +(state.balance + reward).toFixed(3);
+    state.totalMined = +(state.totalMined + reward).toFixed(3);
+    state.dailyTasks.completed[id] = true;
+    showToast(`✅ ${task.title}: +${reward.toLocaleString()} ANIM`);
+    updateUI(); saveUserData();
+  };
+
+  if(task.type === 'ad'){
+    showRewardedAd()
+      .then(() => giveReward())
+      .catch(() => showToast('❌ Anuncio no completado'));
+    return;
+  }
+
+  if(task.link){
+    window.open(task.link, '_blank');
+  }
+  giveReward();
+}
+
+function renderTasks(){
+  const adsList = document.getElementById('ads-tasks-list');
+  const extList = document.getElementById('external-tasks-list');
+  if(!adsList || !extList) return;
+
+  resetDailyIfNeeded();
+  adsList.innerHTML = '';
+  extList.innerHTML = '';
+
+  TASKS.forEach(task => {
+    const done = !!state.dailyTasks.completed[task.id];
+    const reward = isVipActive() ? task.rewardVip : task.rewardNormal;
+    const btnText = done ? '✓ Completada' : (task.type === 'ad' ? `Ver anuncio (+${reward.toLocaleString()})` : `Completar (+${reward.toLocaleString()})`);
+
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.innerHTML = `
+      <h4 style="font-size:14px">${task.title}</h4>
+      <p style="font-size:12px;color:var(--dim);margin:4px 0 8px">${task.desc}</p>
+      <button class="task-btn" ${done ? 'disabled' : ''} onclick="claimTask(${task.id})">${btnText}</button>
+    `;
+
+    if(task.type === 'ad') adsList.appendChild(card);
+    else extList.appendChild(card);
+  });
+}
+
+async function saveUserData(){
+  state.lastTimestamp = Date.now();
+  localStorage.setItem('animeMiningState', JSON.stringify(state));
+  if(!window.firebaseDB) return;
+  try{
+    const {db,doc,setDoc} = window.firebaseDB;
+    await setDoc(doc(db,'users',state.userId), state, {merge:true});
+  }catch(e){}
+}
+
+async function loadUserData(){
+  const s = localStorage.getItem('animeMiningState');
+  if(s) try{ state = {...state, ...JSON.parse(s)}; }catch(e){}
+  if(window.firebaseDB){
+    try{
+      const {db,doc,getDoc,setDoc,increment} = window.firebaseDB;
+      const snap = await getDoc(doc(db,'users',state.userId));
+      if(snap.exists()){
+        const d = snap.data();
+        state = {...state, ...d,
+          balance: Math.max(state.balance||0, d.balance||0),
+          pending: Math.max(state.pending||0, d.pending||0),
+          totalMined: Math.max(state.totalMined||0, d.totalMined||0),
+          tonInvested: Math.max(state.tonInvested||0, d.tonInvested||0)
+        };
+      } else {
+        const ref = new URLSearchParams(location.search).get('ref');
+        if(ref && ref !== state.userId && isValidId(ref)){
+          state.referredBy = ref;
+          try{ await setDoc(doc(db,'users',ref), {referrals:increment(1), referralRewards:increment(50)}, {merge:true}); }catch(e){}
+          state.balance += 20;
+          showToast('🎉 +20 ANIM por referido');
+        }
+        await saveUserData();
+      }
+    }catch(e){}
+  }
+  const now = Date.now();
+  if(state.lastTimestamp){
+    const sec = Math.floor((now - state.lastTimestamp)/1000);
+    if(sec > 10 && state.energy > 0){
+      recalculateMiningRate();
+      const mined = +((Math.min(sec,86400) * state.miningRate).toFixed(3));
+      state.pending = +(state.pending + mined).toFixed(3);
+      if(mined > 0) showToast(`🌙 +${mined} ANIM offline`);
+    }
+  }
+  state.lastTimestamp = now;
+  resetDailyIfNeeded();
+  recalculateMiningRate();
+  updateUI();
+}
+setInterval(saveUserData, 12000);
+
+function updateUI(){
+  document.getElementById('modal-username').textContent = state.firstName || state.username;
+  document.getElementById('token-count').textContent = state.balance.toFixed(3);
+  document.getElementById('pending-amount').textContent = state.pending.toFixed(3);
+  document.getElementById('accumulated-display').textContent = state.pending.toFixed(3) + ' ANIM';
+  document.getElementById('mine-rate').textContent = state.miningRate.toFixed(4);
+  document.getElementById('energy-text').textContent = Math.round(state.energy) + '/' + state.maxEnergy;
+  document.getElementById('energy-bar').style.width = Math.min(100, state.energy/state.maxEnergy*100) + '%';
+  const rechargeBtn = document.getElementById('recharge-btn');
+  if(rechargeBtn) rechargeBtn.style.display = state.energy <= 0 ? 'block' : 'none';
+  document.getElementById('modal-level').textContent = 'Nv. ' + state.level;
+  document.getElementById('level-big').textContent = state.level;
+  document.getElementById('level-text').textContent = Math.round(state.xp) + ' / ' + state.xpToNext;
+  document.getElementById('level-bar').style.width = Math.min(100, state.xp/state.xpToNext*100) + '%';
+  document.getElementById('modal-total').textContent = state.totalMined.toFixed(3) + ' ANIM';
+  document.getElementById('modal-invested').textContent = (state.tonInvested||0).toFixed(2) + ' TON';
+  document.getElementById('wallet-anim').textContent = state.balance.toFixed(3);
+  document.getElementById('wallet-ton').textContent = (state.balance/ANIM_PER_TON).toFixed(4) + ' TON';
+  document.getElementById('ref-count').textContent = state.referrals||0;
+  document.getElementById('ref-rewards').textContent = (state.referralRewards||0).toFixed(3) + ' ANIM';
+  document.getElementById('ref-link').value = state.refLink;
+
+  if(isVipActive()){
+    const d = getVipDaysLeft();
+    document.getElementById('modal-vip').textContent = `👑 VIP (${d}d)`;
+    document.getElementById('buy-vip-btn').disabled = true;
+    document.getElementById('buy-vip-btn').textContent = `VIP Activo · ${d} días`;
+    document.getElementById('vip-status-box').innerHTML = `<strong>👑 VIP Activo</strong><br>Días restantes: <b>${d}</b><br>Cumple los 15 días y recuperas 5 TON + 1 TON extra.`;
+  } else {
+    document.getElementById('modal-vip').textContent = '❌ Gratuito';
+    document.getElementById('buy-vip-btn').disabled = false;
+    document.getElementById('buy-vip-btn').textContent = 'Adquirir VIP (15 días)';
+    document.getElementById('vip-status-box').textContent = 'No tienes VIP activo';
+  }
+
+  resetDailyIfNeeded();
+  const dt = state.dailyTasks;
+  document.getElementById('daily-btn').disabled = dt.checkin;
+  document.getElementById('daily-btn').textContent = dt.checkin ? '✓ Reclamado' : (isVipActive() ? 'Reclamar +15.000' : 'Reclamar +50');
+  document.getElementById('daily-status').textContent = dt.checkin ? 'Completado hoy' : 'Disponible';
+
+  if(state.walletAddress){
+    document.getElementById('wallet-address-display').textContent = '📌 ' + state.walletAddress;
+    document.getElementById('connect-wallet-btn').textContent = '✅ Conectada';
+  }
+  renderBreathList();
+  renderTasks();
+}
+
+function showToast(m){
+  const t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+function openMenu(){ document.getElementById('menuOverlay').classList.add('active'); document.getElementById('sideMenu').classList.add('active'); }
+function closeMenu(){ document.getElementById('menuOverlay').classList.remove('active'); document.getElementById('sideMenu').classList.remove('active'); }
+function openModal(name){ document.getElementById('modal-'+name).classList.add('active'); }
+function closeModal(name){ document.getElementById('modal-'+name).classList.remove('active'); }
+
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    if(tab === 'upgrades') openModal('upgrades');
+    if(tab === 'rewards') openModal('rewards');
+  });
+});
+
+document.querySelectorAll('[data-subtab]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('[data-subtab]').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.subtab).classList.add('active');
+  });
+});
+
+document.querySelectorAll('.lang-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.lang = btn.dataset.lang;
+    showToast('🌐 Idioma actualizado');
+    saveUserData();
+  });
+});
+
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+  const btn = document.getElementById('soundToggle');
+  btn.textContent = soundEnabled ? '🔊 On' : '🔇 Off';
+  showToast(soundEnabled ? '🔊 Sonido activado' : '🔇 Sonido desactivado');
+}
+
+function copyRefLink(){
+  if(navigator.clipboard) navigator.clipboard.writeText(state.refLink).then(()=>showToast('📋 Copiado'));
+  else { document.getElementById('ref-link').select(); showToast('📋 Copia el enlace'); }
+}
+
+document.getElementById('collect-button').addEventListener('click', ()=>{
+  if(state.pending <= 0) return;
+  const amt = state.pending;
+  state.balance = +(state.balance + amt).toFixed(3);
+  state.totalMined = +(state.totalMined + amt).toFixed(3);
+  state.pending = 0;
+  showToast('✅ +' + amt.toFixed(3) + ' ANIM');
+  updateUI(); saveUserData();
+});
+
+document.getElementById('convert-amount').addEventListener('input', e=>{
+  const a = parseFloat(e.target.value)||0;
+  document.getElementById('convert-result').textContent = (a>=50000 ? (a/ANIM_PER_TON).toFixed(4) : '0.0000') + ' TON';
+});
+
+document.getElementById('convert-btn').addEventListener('click', ()=>{
+  if(!state.walletAddress) return showToast('⚠️ Conecta tu billetera');
+  const amt = parseFloat(document.getElementById('convert-amount').value)||0;
+  if(amt < 50000) return showToast('⚠️ Mínimo 50,000 ANIM');
+  if(state.balance < amt) return showToast('❌ Saldo insuficiente');
+  const canFast = isVipActive() || state.tonInvested >= 5;
+  if(!canFast && state.balance/ANIM_PER_TON < 2) return showToast('🔒 Necesitas VIP o 2 TON en balance');
+  state.balance = +(state.balance - amt).toFixed(3);
+  document.getElementById('convert-amount').value = '';
+  showToast(canFast ? `⚡ Retiro inmediato ${(amt/ANIM_PER_TON).toFixed(4)} TON` : `🕒 Solicitud registrada`);
+  updateUI(); saveUserData();
+});
+
+document.getElementById('connect-wallet-btn').addEventListener('click', ()=>{
+  connectTonWallet();
+});
+
+setInterval(()=>{
+  if(state.energy > 0){
+    state.pending = +(state.pending + state.miningRate).toFixed(6);
+    state.energy = Math.max(0, +(state.energy - 0.014).toFixed(3));
+    state.xp = +(state.xp + 0.02).toFixed(2);
+    if(state.xp >= state.xpToNext){
+      state.level++;
+      state.xp = +(state.xp - state.xpToNext).toFixed(2);
+      state.xpToNext = Math.floor(state.xpToNext * 1.3);
+      const r = state.level * 10;
+      state.balance = +(state.balance + r).toFixed(3);
+      state.totalMined = +(state.totalMined + r).toFixed(3);
+      showToast('🎉 Nivel ' + state.level + ' +' + r + ' ANIM');
+      saveUserData();
+    }
+    updateUI();
+  } else {
+    const btn = document.getElementById('recharge-btn');
+    if(btn) btn.style.display = 'block';
+  }
+}, 1000);
+
+function rechargeEnergy(){
+  showRewardedAd()
+    .then(() => {
+      state.energy = state.maxEnergy;
+      document.getElementById('recharge-btn').style.display = 'none';
+      showToast('⚡ Energía recargada (2h)');
+      updateUI();
+      saveUserData();
+    })
+    .catch(() => showToast('❌ Anuncio no completado'));
+}
+
+function startApp(){
+  if(window.__started) return;
+  const go = ()=>{
+    if(window.__started) return;
+    window.__started = true;
+    initAdsGram();
+    initTonConnect();
+    loadUserData();
+  };
+  if(window.firebaseDB) go();
+  else { window.addEventListener('firebase-ready', go, {once:true}); setTimeout(go, 2000); }
+}
+startApp();
+</script>
 </body>
 </html>
